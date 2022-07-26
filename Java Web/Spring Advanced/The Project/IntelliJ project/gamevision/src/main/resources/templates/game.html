@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/common::head"></head>
+
+<body>
+<header th:replace="fragments/common::nav"></header>
+
+<main th:object="${game}">
+    <!--  <input type="hidden" name="gameId" id="gameId" th:value="${game.id}"> --> <!-- todo check this -->
+    <!-- hero game-details-section -->
+    <section class="game-view-section section-format py-5">
+        <h1 th:text="*{title}">Game Title</h1>
+        <!-- maybe a carousel with screenshots here if time permits -->
+        <figure>
+            <img class="game-title-image" th:src="*{titleImageUrl}"
+                 alt="Game title image">
+        </figure>
+    </section>
+
+    <section class="game-description text-center">
+        <p th:text="*{description}"> Game description. </p>
+
+        <div class="genres-container">
+            <p>Genre(s):</p>
+            <!--  <th:block th:each="genre : *{genres}"><span th:text="${genre}>Platformer, Puzzle</span></th:block> -->
+            <ul class="genres-list">
+                <li th:each="genre : *{genres}" th:text="${genre}"></li>
+            </ul>
+        </div>
+
+        <div class="buttons-container">
+            <a th:href="@{/games/{gameId}/playthroughs/add/(gameId=*{id})}" id="add-playthrough-btn"
+               class="link-button btn btn-info w-50">Add a playthrough</a> <!-- admins only -->
+            <a th:href="@{/games/{gameId}/playthroughs/all/(gameId=*{id})}" id="playthroughs-btn"
+               class="link-button btn btn-info w-50">Playthroughs</a>
+            <!--  <button id="playthroughs-btn" class="link-button btn btn-info w-50">Playthroughs</button> -->
+            <button id="comments-btn" class="link-button btn btn-info w-50">Comments</button>
+        </div>
+
+        <hr class="hr-separator">
+    </section>
+
+
+    <!-- Playthroughs or Comments -->
+    <div id="playthroughs-comments-container">
+
+        <!-- TODO change the two sections' style to hidden or '' depending on which button is clicked -->
+        <!-- Short on time, don't remember much from JS SAP, never tried to integrate them in Java before, go with separate pages -->
+
+        <!-- playthroughs section -->
+        <section id="playthroughs-section">
+
+            <p class="playthrough-list-caption">Available playthroughs:</p>
+
+            <div class="row playthrough-cards-container">
+
+                <div class="playthrough-card">
+                    <!-- video title from service/repo goes here -->
+                    <div class="video-container container-fluid col-10">
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/3O2g3Ql3nRU"
+                                title="YouTube video player" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen></iframe>
+                    </div>
+
+                    <div class="playthrough-info-container">
+                        <!-- replace text content with Thymeleaf-->
+                        <div class="playthrough-description">
+                            <h3 class="playthrough-title">Ori and the Blind Forest: Definitive Edition</h3>
+                            <hr>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at magna nisl. In
+                                hendrerit eros tortor, ut porta augue finibus vitae. Aliquam ut viverra neque. In
+                                malesuada dui a risus venenatis efficitur. Praesent sollicitudin eleifend purus,
+                                accumsan ultrices tellus. Nullam ac interdum justo. Vestibulum accumsan, ligula nec
+                                finibus scelerisque, massa nisl bibendum turpis, id maximus urna felis non enim.
+                                Maecenas convallis commodo finibus. Nam ultricies dolor in augue vulputate, et venenatis
+                                justo viverra. </p>
+                        </div>
+
+                        <div class="playthrough-feedback-container">
+
+                            <button class="like-button btn btn-info w-50">Like</button>
+                            <div class="likes-counter-div">Likes: 77777</div>
+                            <button class="link-button btn btn-info w-50">Comments</button>
+                            <!-- link to playthrough comment section - read and add comments -->
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Comments section TODO: -->
+        <section id="comments-section">
+
+            <p>Dummy comments text</p>
+            <div>
+                <!-- Comments submission -->
+                <form id="commentForm" method="POST"
+                      action="/">
+                    <div class="form-group">
+                        <h4>Leave a comment</h4>
+                        <label for="message">Message</label>
+
+                        <textarea name="message"
+                                  id="message"
+                                  cols="30"
+                                  rows="5"
+                                  class="form-control"
+                                  style="background-color: white;"></textarea>
+                        <small id="messageError" class="invalid-feedback">
+                            Message should be at least 10 characters.
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit"
+                               class="btn"
+                               id="postComment"
+                               value="Post Comment"/>
+                    </div>
+                </form>
+                <!-- Comments submission -->
+            </div>
+
+        </section>
+
+
+    </div>
+
+</main>
+<!-- <script th:src="@{/scripts/game.js}"></script> -->
+<script th:src="@{/scripts/game.js}"></script>
+
+</body>
+
+<footer th:replace="fragments/common::footer"></footer>
+</html>

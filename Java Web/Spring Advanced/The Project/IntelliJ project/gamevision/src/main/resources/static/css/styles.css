@@ -1,0 +1,429 @@
+
+body {
+    background-color: #03080E;
+}
+
+#mainNavigationBar {
+    background-color: #131A21;
+}
+
+#leftNavbar {
+    float: left;
+}
+
+#rightNavbar {
+    float: right;
+}
+
+.side-nav li a, .navbar ul li a {
+    font-size: 1vw;
+    font-family: 'Electrolize', serif;
+    color: #587e91;
+    text-transform: uppercase;
+    display: inline;
+    line-height: 38px;
+    width: 100%;
+}
+
+/** display: inline   -> height: has no effect */
+
+/** also keeps footer in place */
+main {
+    display: block;
+    margin: auto;
+    width: 90%;
+}
+
+/** margin: 2rem auto 4rem;
+  width: 90%;
+  max-width: 70rem;
+  */
+
+
+/** Carousel */
+#carouselContainer {
+    margin-top: 20vh;
+    margin-bottom: 20vh;
+    height: 47vh;
+
+}
+
+.carousel-inner {
+    background-color: black !important;
+    margin-top: 10vh;
+}
+
+.carousel-inner > div > img {
+    display: inline-block;
+    float: left;
+
+}
+
+.carousel-caption {
+    padding-left: 10px;
+    margin-left: 150px;
+    display: inline-block;
+    float: right;
+    width: 100%;
+
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+    margin: 10px;
+    text-align: center;
+}
+
+h3 {
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    margin: 5px;
+    text-align: left;
+}
+
+/** .carousel-caption p {
+    font-size: 12px;
+} */
+
+p {
+    font-size: 1.25rem;
+    max-width: 75ch;
+    color: white;
+}
+
+
+img {
+    max-width: 100%;
+    object-position: bottom right; /** anchor when resizing */
+}
+
+/**  position: relatve; */
+figure {
+    margin: 2rem 0;
+    display: inline-block;
+}
+
+figure img {
+    display: block;
+}
+
+
+.card {
+    margin: 10px;
+}
+
+.story-button {
+    background-color: #03080E;
+}
+
+
+/** To push footer to the bottom */
+.spacer-about {
+    padding: 21%;
+    flex: 1;
+}
+
+/** .spacer-home {
+    padding: 10%;
+    flex: 1;
+} */
+
+
+/**
+.section-format {
+    text-align: center;
+    font-size: 17px;
+    color: white;
+}
+
+.section-format h1 {
+    font-size: 25px;
+    font-weight: bold;
+    margin: 5vh;
+}
+*/
+
+.hero {
+    height: 80vh;
+    max-height: 40rem;
+}
+
+.game-details-section {
+    margin: auto;
+    width: 60%;
+    height: 60%;
+}
+
+.card-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    text-decoration: underline;
+    margin-top: 5px;
+    margin-bottom: 7px;
+}
+
+.card-text {
+    font-size: 15px;
+}
+
+.card-body {
+    background-color: #131A21;
+}
+
+.bottom-card-text {
+    margin: 5px;
+    color: #6C8BF4;
+}
+
+
+/**
+.title-image-container {
+    display: inline-block;
+    margin: 5px;
+}
+*/
+
+.game-title-image {
+    height: 100%;
+    width: 100%;
+    object-fit: contain; /** fit container, keep ratio */
+}
+
+.genres-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+/** default font-size is font-size: 1.25rem;*/
+.genres-container p {
+    color: lightblue;
+    font-style: italic;
+    display: inline;
+    float: left;
+}
+
+/** list bullet   styling to force bullets   class="game-view-genres-ul" */
+ul {
+    display: inline;
+    list-style-type: disc;
+    float: left;
+}
+
+.genres-list li {
+    list-style: none;
+    float: left;
+    color: lightblue;
+    font-style: italic;
+    font-size: 1.25rem;
+}
+
+/** content is the bullet */
+.genres-list li:before {
+    content: '\2022';
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+/** .playthrough-card-container{
+position: relative;
+} */
+
+.playthrough-list-caption {
+    font-weight: bold;
+    color: #3dd5f3;
+    margin: 3%;
+    text-align: center;
+    font-size: 27px;
+    float: left;
+    display: block;
+    width: 100%;
+}
+
+.buttons-container {
+    margin: 3%;
+    padding: 3%;
+    display: block;
+    width: 100%;
+}
+
+.hr-separator {
+    display: block;
+    width: 100%;
+    margin-top: 3%;
+    margin-bottom: 3%;
+}
+
+/** Playthroughs */
+.playthrough-card {
+    margin: 1%;
+    padding: 1%;
+    position: relative;
+    width: 100%;
+    float: left;
+    display: block;
+}
+
+.video-container {
+    display: inline-block;
+    padding-top: 10%;
+    padding-right: 3%;
+    overflow: hidden;
+    object-position: bottom right;
+    float: left;
+}
+
+/** style the iframe of the video */
+.video-container iframe {
+    object-position: bottom left;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.playthrough-info-container {
+    width: 45%;
+    height: 80%;
+    margin: 3%;
+    padding-bottom: 5%;
+    display: inline-block;
+    float: left;
+    bottom: 0;
+}
+
+.playthrough-description {
+    display: block;
+    float: left;
+    margin: 3%;
+}
+
+.playthrough-title {
+    font-weight: bold;
+    font-size: 20px;
+    text-align: center;
+    float: left;
+    display: block;
+}
+
+.playthrough-info-container p {
+    font-size: 16px;
+    float: left;
+    display: block;
+}
+
+.playthrough-feedback-container {
+    display: block;
+    float: left;
+    margin: 3%;
+    height: 5%;
+    width: 95%;
+}
+
+/** TODO: fix these tree feedback elements */
+
+.like-button {
+    display: inline-block;
+    object-position: bottom;
+    padding: 3%;
+    float: left;
+    bottom: 0;
+    margin: 1% 5% 0 3%;
+    font-size: 16px;
+}
+
+.likes-counter-div {
+    display: inline-block;
+    float: left;
+    color: white;
+    font-size: 16px;
+    font-style: italic;
+    bottom: 0;
+    margin-top: 5%;
+    padding: 3%;
+}
+
+/**  width: auto; fixes text overflowing from button */
+
+.link-button {
+    object-position: bottom;
+    display: inline-block;
+    float: left;
+    bottom: 0;
+    margin-right: 0;
+    margin-top: 5%;
+    margin-left: 20%;
+    width: auto;
+    font-size: 115%;
+}
+
+/**
+.distribute-evenly{
+    display: flex;
+    justify-content: space-evenly;
+}
+*/
+/**
+.game-details-section > p{
+    display: inline-block;
+}
+*/
+/* Footer
+*/
+
+/**
+footer {
+    margin: auto;
+    text-align: center;
+    width: 100%;
+    display: block;
+}
+*/
+
+.about-us-article {
+    color: white;
+    font-size: 17px;
+    width: 90%;
+}
+
+.red-alert {
+    background-color: red;
+}
+
+.form-width {
+    width: 30%;
+    display: block;
+    margin-left: 35%;
+    margin-right: 35%;
+}
+
+.white-text {
+    color: white;
+}
+
+
+/** User Profile */
+
+
+footer {
+    bottom: 0;
+    text-align: left;
+    padding: 8px;
+    position: relative;
+    width: 100%;
+    float: right;
+    margin-top: 0;
+    justify-content: space-around;
+}
+
+footer p {
+    color: gray;
+}
+
+
+.exception-messages {
+    color: red;
+    font-weight: bold;
+}
