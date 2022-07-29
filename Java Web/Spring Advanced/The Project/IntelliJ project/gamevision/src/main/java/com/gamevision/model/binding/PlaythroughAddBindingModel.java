@@ -1,4 +1,5 @@
 package com.gamevision.model.binding;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -10,10 +11,8 @@ public class PlaythroughAddBindingModel {
 
     @Size(min = 10, max = 40) //E.g. Sarcastic Dragon Age II run
     @NotBlank
-    @NotNull
     private String title;
 
-    @NotNull
     @NotBlank
     private String videoUrl;
 
@@ -24,7 +23,7 @@ public class PlaythroughAddBindingModel {
     @NotNull
     private String username; //from UserDetails
 
-   //initialize Set<CommentEntity> comments  and  private Integer likesCounter; in the @Service!
+    //initialize Set<CommentEntity> comments  and  private Integer likesCounter; in the @Service!
 
 
     public PlaythroughAddBindingModel() {

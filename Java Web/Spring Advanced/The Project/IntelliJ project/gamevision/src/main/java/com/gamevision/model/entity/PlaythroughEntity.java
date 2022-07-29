@@ -14,13 +14,12 @@ public class PlaythroughEntity extends BaseEntity {
     private GameEntity game;
 
     @Size(min = 10, max = 40) //E.g. Sarcastic Dragon Age II run
-    @NotBlank
     @Column(nullable = false)
     private String title;
 
-    @NotNull
+
     @NotBlank
-    @Column(name="video_url")
+    @Column(name="video_url", nullable = false)
     private String videoUrl;
 
     @NotBlank
@@ -31,8 +30,9 @@ public class PlaythroughEntity extends BaseEntity {
     @ManyToOne
     private UserEntity addedBy;
 
-    @OneToMany(fetch = FetchType.EAGER) //many comments under a playthrough
-    private Set<CommentEntity> comments;
+    //TODO: for when comments for playthroughs are implemented
+    @OneToMany(fetch = FetchType.EAGER)
+  private Set<CommentEntity> comments;
 
 
 

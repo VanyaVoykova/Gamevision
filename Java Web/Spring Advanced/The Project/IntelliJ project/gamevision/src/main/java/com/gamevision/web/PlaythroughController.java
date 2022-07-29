@@ -20,7 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
-@RequestMapping("/games/{gameId}/playthroughs") //todo: check url
+@RequestMapping("/games/{gameId}/playthroughs") //todo: check url - use it in the show/hide script
 public class PlaythroughController {
     private final PlaythroughRepository playthroughRepository;
     private final PlaythroughService playthroughService;
@@ -57,7 +57,8 @@ public class PlaythroughController {
             return "/errors/game-not-found-error";
         }
 
-        return "playthroughs-all";
+        return "playthroughs-all"; //with a separate playthroughs template & page
+      // return "redirect:/games/{gameId}"; //trying to show them on the game's page with show/hide Playthroughs/Comments
 
     }
 

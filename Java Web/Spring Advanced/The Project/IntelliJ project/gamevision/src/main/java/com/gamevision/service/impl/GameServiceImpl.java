@@ -1,8 +1,8 @@
 package com.gamevision.service.impl;
 
-import com.gamevision.exceptions.GameNotFoundException;
-import com.gamevision.exceptions.GameTitleExistsException;
-import com.gamevision.exceptions.UserNotFoundException;
+import com.gamevision.errorhandling.exceptions.GameNotFoundException;
+import com.gamevision.errorhandling.exceptions.GameTitleExistsException;
+import com.gamevision.errorhandling.exceptions.UserNotFoundException;
 import com.gamevision.model.entity.GameEntity;
 import com.gamevision.model.entity.GenreEntity;
 import com.gamevision.model.entity.UserEntity;
@@ -148,6 +148,17 @@ public class GameServiceImpl implements GameService {
     public String getGameTitleById(Long id) {
         GameEntity game = gameRepository.findById(id).orElseThrow(GameNotFoundException::new);
         return game.getTitle();
+    }
+
+    @Override
+    public GameEntity getGameById(Long id) {
+        return gameRepository.findById(id).orElseThrow(GameNotFoundException::new);
+    }
+
+    @Override //good practice to not have another service work directly with a repo not holding its entity
+    public GameEntity saveGame(GameEntity gameEntity) {
+
+        return gameRepository.save(gameEntity);
     }
 
 

@@ -5,6 +5,7 @@ import com.gamevision.service.GamevisionUserDetailsService;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -43,22 +44,41 @@ public class GamevisionSecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         // define which requests are allowed and which not
+
+        //antMatchers ORDER MATTERS
         http.authorizeRequests()
                 // everyone can download static resources (css, js, images)
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 //pages everyone can access - authentication is required only for likes and comments + admin & moderator functions
-                .antMatchers("/", "/about", "/games/all", "/games/{id}", "/users/forum").permitAll() ///games/view/* - view a game, * is id
+                .antMatchers("/**").permitAll()
 
-                .antMatchers("/users/login", "/users/register").anonymous() //guest users only
+
+                .antMatchers(HttpMethod.GET, "/", "/about", "/games/all", "/games/{id}/playthroughs/all", "/users/forum", "/api/**").permitAll() ///games/view/* - view a game, * is id; removed "/api/**"
+
+                //removed from above: "/games/{id}"
+
+
+                //TODO: "api/**" is for comments - check if only authenticated users can make POST requests (post and like comments)
+//** is that the second matches the entire directory tree
+                //* only matches at the level it's specified at.
+
+
+///api/{gameId}/comments/{commentId}   //TODO: NCOMMENT
                 .antMatchers("/users/profile").authenticated() //authenticated users only
 
+                //TODO fix cannot post comments, going with api/** .permitAll for now above
+                //only authenticated users can post and like comments, everybody can view comments    //TODO: NCOMMENT
+                .antMatchers(HttpMethod.POST, "/api/games/{gameId}").authenticated() //post is actually from /games/{gameId}
+
+
                 //for authenticated users only; TODO: check if this URL needs tweaking or it's Spring lingo; will be needed only if I get to the admin panel
-                .antMatchers("/pages/moderators").hasRole(UserRoleEnum.MODERATOR.name())
-                .antMatchers("/pages/admins", "/games/add", "/games/{id}/edit", "/games/{id}/delete", "/games/{id}/playthroughs/all", "/games/{id}/playthroughs/all/add").hasRole(UserRoleEnum.ADMIN.name())
+                // .antMatchers("/pages/moderators").hasRole(UserRoleEnum.MODERATOR.name()) ///games/{gameId}/playthroughs/add/(gameId=*{id})}" //uncomment for MODERATOR
+                .antMatchers("/pages/admins", "/games/add", "/games/{id}/edit", "/games/{id}/delete", "/games/{id}/playthroughs/add").hasRole(UserRoleEnum.ADMIN.name())
 //TODO: add for admins - users/{userId} - user management
 
                 //TODO add for profile
-                // .antMatchers("/users/profile").authenticated()
+                .antMatchers("/users/profile").authenticated()
+
 
                 //All other pages available for authenticated users (aka simple users)
                 .anyRequest()
@@ -71,26 +91,34 @@ public class GamevisionSecurityConfiguration {
                 .loginPage("/users/login")
                 //check what credentials are used for login, usually username and password
                 // the name of the username <form> field;     //simpler alternative: userNameParemeter("username")
-                .usernameParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY)
+                .usernameParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY) //alternative:  .usernameParameter("username")
                 // the name of the password <form> field; naming is very important
-                .passwordParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY)
+                .passwordParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY) //alternative:   .passwordParameter("password")
                 // where to go on successful login
-                .defaultSuccessUrl("/")
+                .defaultSuccessUrl("/") //sometimes goes to /games ????  <- error
                 // where to go in case on failed login, just a mapping in controller is enough, no separate template needed, just redirect to login
-                .failureForwardUrl("/users/login-error") //("/users/login-error") or put a query param ("/users/login?error=true")
+                .failureForwardUrl("/users/login?error=true") //("/users/login-error") or put a query param ("/users/login?error=true")
 
                 .and()
                 // configure logout
                 .logout()
                 //the logout url, must be POST request (remember to use POST in controller and template)
                 .logoutUrl("/users/logout")
-                // on logout go to the home page; It shouldn't be able to fail, right?
-                .logoutSuccessUrl("/")
+                .clearAuthentication(true)
                 // invalidate the session and delete the cookies
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID");
+                .invalidateHttpSession(true) //Pathfinder iss without this
+                .deleteCookies("JSESSIONID")
+                // on logout go to the home page; It shouldn't be able to fail, right?
+                .logoutSuccessUrl("/"); //redirect only after the above
+                //add ; and remove the rest if you want to use cors
 
-        //.csrf().disable(); //if not useing any cors
+                //TODO: COMMENT OUT these two, add ; above
+                //cannot find csrf tokens if disabled, of course
+              // .and()
+              // .csrf().disable();
+
+
+        //.csrf().disable(); //if not using any cors, tokens
 
 
         return http.build();

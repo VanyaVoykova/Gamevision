@@ -15,8 +15,9 @@ public interface UserService {
     //  UserServiceModel findByUsernameAndPassword(String username, String password);
     // void loginUser(Long id, String username);
 
-    Optional<UserEntity> findUserById(Long id);
+    UserEntity findUserById(Long id);
 
+   UserEntity findUserByUsername(String username);
     //  void updateUser(UserEntity user);
 
     void initUsers();

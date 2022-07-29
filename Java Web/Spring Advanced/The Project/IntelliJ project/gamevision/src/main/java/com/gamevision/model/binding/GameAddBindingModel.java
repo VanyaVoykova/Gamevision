@@ -42,16 +42,13 @@ public class GameAddBindingModel {
 //TODO: check MM will add an empty Set<PlaythroughEntity> when mapping to GameEntity in @Service
 
     @Size(min = 10, max = 40) //E.g. Sarcastic Dragon Age II run
-    @NotBlank
-    @NotNull
+    @NotBlank //just @NotBlank, it covers @NotNull
     private String playthroughTitle;
 
     @NotBlank
-    @NotNull
     private String playthroughVideoUrl; //URL
 
     @NotBlank
-    @NotNull
     @Size(min = 10, max = 200) //E.g. Sarcastic Dragon Age II run
     private String playthroughDescription;
 

@@ -323,26 +323,45 @@ position: relative;
 }
 
 /** TODO: fix these tree feedback elements */
+/** comments */
+.comment-container {
+    display: inline-block;
+    float: top;
+    width: 100%;
+    margin: 1.5%;
+}
+
+/** Posted by: {username}*/
+.comment-container h4 {
+    font-style: italic;
+    color: lightblue;
+    font-size: 12px;
+}
+.comment-container p {
+    font-size: 12px;
+}
+
 
 .like-button {
     display: inline-block;
     object-position: bottom;
-    padding: 3%;
+    padding: 0.5%;
     float: left;
     bottom: 0;
-    margin: 1% 5% 0 3%;
-    font-size: 16px;
+    margin: 0.5%;
+    font-size: 12px;
 }
 
 .likes-counter-div {
     display: inline-block;
     float: left;
     color: white;
-    font-size: 16px;
+    font-size: 12px;
     font-style: italic;
     bottom: 0;
-    margin-top: 5%;
-    padding: 3%;
+    margin-top: 1%;
+    margin-left: 1%;
+    padding: 1%;
 }
 
 /**  width: auto; fixes text overflowing from button */

@@ -1,11 +1,7 @@
 package com.gamevision.web;
 
-import com.gamevision.exceptions.GameNotFoundException;
-import com.gamevision.exceptions.GameTitleExistsException;
-import com.gamevision.exceptions.MissingGenresException;
 import com.gamevision.model.binding.GameAddBindingModel;
 import com.gamevision.model.binding.GameEditBindingModel;
-import com.gamevision.model.entity.GameEntity;
 import com.gamevision.model.enums.GenreNameEnum;
 import com.gamevision.model.servicemodels.GameAddServiceModel;
 import com.gamevision.model.servicemodels.GameEditServiceModel;
@@ -25,10 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class GameController {
@@ -42,7 +35,6 @@ public class GameController {
         this.modelMapper = modelMapper;
     }
 
-    //TODO: error handling in controller, exceptions added in Service
 
 
     //Skip pagination for now?
@@ -72,15 +64,17 @@ public class GameController {
     }
 
 
+
     //For ADMINS:
 
     @GetMapping("/games/add")
     //Check if Model model is necessary her/or still needed below - SS takes care for UserRegistrationBindingmodel or?
     public String addGame(Model model) { //model here to add attribute below
         //add attribute here i/o with @ModelAttribute on a separate method, it's short enough
-        if (!model.containsAttribute("gameAddBindingModel")) {
-            model.addAttribute("gameAddBindingModel", new GameAddBindingModel());
-        }
+        //Will add it with @ModelAttribute, so it's accessible for all here
+     //  if (!model.containsAttribute("gameAddBindingModel")) {
+     //      model.addAttribute("gameAddBindingModel", new GameAddBindingModel());
+     //  }
 
         //Text for the genre checkboxes labels
         //   List<String> allGenres = GenreNameEnum.values().stream().collect(Collectors.toList());
@@ -200,7 +194,7 @@ public class GameController {
 
             gameEditBindingModel.setGenres(genre); //List<String> from the checkboxes
 
-            GameEditServiceModel gameEditServiceModel = modelMapper.map(gameEditBindingModel, GameEditServiceModel.class); //not very necessary
+            GameEditServiceModel gameEditServiceModel = modelMapper.map(gameEditBindingModel, GameEditServiceModel.class); //not very necessary but yey for ModelMapper
 
             //Two possible errors: GameNotFoundException and title UNIQUENESS violation (another game with the new title exists) - thrown by gameService
             gameService.editGame(id, gameEditServiceModel); //saves the game, so it can get the gameId; then calls the PlaythroughRepo to save the playthrough with the game id, then adds the  playthrough to the saved game
@@ -220,9 +214,9 @@ public class GameController {
     // No More @ModelAttribute, Spring Security takes care of it
 
     //check with this just in case
-    //  @ModelAttribute("gameAddBindingModel")
-    //  public GameAddBindingModel gameAddbindingModel() {
-    //      return new GameAddBindingModel();
-    //  }
+     @ModelAttribute("gameAddBindingModel")
+    public GameAddBindingModel gameAddbindingModel() {
+       return new GameAddBindingModel();
+      }
 
 }

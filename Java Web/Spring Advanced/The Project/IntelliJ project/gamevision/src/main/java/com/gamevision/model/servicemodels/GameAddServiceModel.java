@@ -1,13 +1,10 @@
 package com.gamevision.model.servicemodels;
 
-import com.gamevision.model.entity.CommentEntity;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
-import java.util.Set;
 
 public class GameAddServiceModel {
 
@@ -34,15 +31,12 @@ public class GameAddServiceModel {
     //Todo check if MM initializes an empty set here
     @Size(min = 10, max = 40) //E.g. Sarcastic Dragon Age II run
     @NotBlank
-    @NotNull
     private String playthroughTitle;
 
     @NotBlank
-    @NotNull
     private String playthroughVideoUrl;
 
     @NotBlank
-    @NotNull
     @Size(min = 10, max = 200) //E.g. Sarcastic Dragon Age II run
     private String playthroughDescription;
 

@@ -7,20 +7,22 @@
 
 <body>
 <header th:replace="fragments/common::nav"></header>
+<input type="hidden" name="gameId" id="gameId" th:object ="${game}" th:value="${game.id}"> <!-- for JS and REST - right after header -->
+ <!-- todo: check if th:object here is OK  th:object="${game}"  -->
 
 <main th:object="${game}">
-    <!--  <input type="hidden" name="gameId" id="gameId" th:value="${game.id}"> --> <!-- todo check this -->
+
+    <!-- TODO: check position For REST controller -->
     <!-- hero game-details-section -->
     <section class="game-view-section section-format py-5">
+
         <h1 th:text="*{title}">Game Title</h1>
         <!-- maybe a carousel with screenshots here if time permits -->
         <figure>
             <img class="game-title-image" th:src="*{titleImageUrl}"
                  alt="Game title image">
         </figure>
-    </section>
 
-    <section class="game-description text-center">
         <p th:text="*{description}"> Game description. </p>
 
         <div class="genres-container">
@@ -32,17 +34,20 @@
         </div>
 
         <div class="buttons-container">
-            <a th:href="@{/games/{gameId}/playthroughs/add/(gameId=*{id})}" id="add-playthrough-btn"
+            <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/games/{gameId}/playthroughs/add/(gameId=*{id})}"
+               id="add-playthrough-btn"
                class="link-button btn btn-info w-50">Add a playthrough</a> <!-- admins only -->
             <a th:href="@{/games/{gameId}/playthroughs/all/(gameId=*{id})}" id="playthroughs-btn"
                class="link-button btn btn-info w-50">Playthroughs</a>
             <!--  <button id="playthroughs-btn" class="link-button btn btn-info w-50">Playthroughs</button> -->
             <button id="comments-btn" class="link-button btn btn-info w-50">Comments</button>
+            <!-- not a href, comments-btn isjust to show/hide the comments section  <a th:href="@{/comments/{gameId}(gameId=*{id})}" id="game-comments-btn"  class="link-button btn btn-info w-50">Comments</a> -->
+
         </div>
 
-        <hr class="hr-separator">
-    </section>
 
+    </section>
+    <hr class="hr-separator">
 
     <!-- Playthroughs or Comments -->
     <div id="playthroughs-comments-container">
@@ -50,72 +55,44 @@
         <!-- TODO change the two sections' style to hidden or '' depending on which button is clicked -->
         <!-- Short on time, don't remember much from JS SAP, never tried to integrate them in Java before, go with separate pages -->
 
-        <!-- playthroughs section -->
-        <section id="playthroughs-section">
+        <!-- playthroughs section TODO: optimization: show/hide Playthroughs/Comments on this page-->
 
-            <p class="playthrough-list-caption">Available playthroughs:</p>
-
-            <div class="row playthrough-cards-container">
-
-                <div class="playthrough-card">
-                    <!-- video title from service/repo goes here -->
-                    <div class="video-container container-fluid col-10">
-                        <iframe width="560" height="315" src="https://www.youtube.com/embed/3O2g3Ql3nRU"
-                                title="YouTube video player" frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen></iframe>
-                    </div>
-
-                    <div class="playthrough-info-container">
-                        <!-- replace text content with Thymeleaf-->
-                        <div class="playthrough-description">
-                            <h3 class="playthrough-title">Ori and the Blind Forest: Definitive Edition</h3>
-                            <hr>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at magna nisl. In
-                                hendrerit eros tortor, ut porta augue finibus vitae. Aliquam ut viverra neque. In
-                                malesuada dui a risus venenatis efficitur. Praesent sollicitudin eleifend purus,
-                                accumsan ultrices tellus. Nullam ac interdum justo. Vestibulum accumsan, ligula nec
-                                finibus scelerisque, massa nisl bibendum turpis, id maximus urna felis non enim.
-                                Maecenas convallis commodo finibus. Nam ultricies dolor in augue vulputate, et venenatis
-                                justo viverra. </p>
-                        </div>
-
-                        <div class="playthrough-feedback-container">
-
-                            <button class="like-button btn btn-info w-50">Like</button>
-                            <div class="likes-counter-div">Likes: 77777</div>
-                            <button class="link-button btn btn-info w-50">Comments</button>
-                            <!-- link to playthrough comment section - read and add comments -->
-
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-
-        </section>
 
         <!-- Comments section TODO: -->
-        <section id="comments-section">
+        <!-- put comments in <article> -->
 
-            <p>Dummy comments text</p>
-            <div>
+
+        <section id="comments-section" th:object="${game}">
+
+            <h1>Comments</h1>
+            <small id="comment-errors"></small>
+            <!-- Make comment form visible only for authenticated users -->
+   <!--   <div sec:authorize="isAuthenticated()">  doesn't change comments not getting saved -->
+
                 <!-- Comments submission -->
-                <form id="commentForm" method="POST"
-                      action="/">
+
+                <!-- REST controller -> action="/" as submission is handled with an event listener -->
+                <!-- -- can add validation directly in the HTML> -->
+                <!--   <form id="commentForm" th:method="POST" th:action="@{/comments/${game.id}}"> -->
+              <!--  <form id="commentForm" th:method="POST" th:action="@{/api/{gameId}/comments}"> --> <!-- removed Thymeleaf's th -->
+                   <!-- Got "415 Unsupported Media Type" with Thymeleaf's th:   403 Forbidden without it-->
+            <!--    <form id="commentForm" th:method="POST" th:action="/"> < -->
+            <!--415 url encoded error with:     <form id="commentForm" th:method="POST" th:action="@{/games/{gameId}/comments/(gameId=*{id})}">   -->
+         <form id="commentForm" method="POST" action="/"> <!-- changed to # from "/"   action actual path is sniffed by JS through the submit event -->
                     <div class="form-group">
                         <h4>Leave a comment</h4>
-                        <label for="message">Message</label>
+                        <label for="comment">Comment Text</label>
 
-                        <textarea name="message"
-                                  id="message"
+                        <textarea name="comment"
+                                  id="comment"
                                   cols="30"
                                   rows="5"
                                   class="form-control"
-                                  style="background-color: white;"></textarea>
+                                  required
+                                  minlength="10"
+                                  maxlength="3000"></textarea>
                         <small id="messageError" class="invalid-feedback">
-                            Message should be at least 10 characters.
+                            Comment should be at least 10 characters.
                         </small>
                     </div>
 
@@ -125,9 +102,15 @@
                                id="postComment"
                                value="Post Comment"/>
                     </div>
+
+             <!-- TODO: will this help with 403?-->
+           <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/> <!-- EL1007E: Property or field 'token' cannot be found on null -->
+           <!-- <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> cannot find prop  -->
                 </form>
                 <!-- Comments submission -->
-            </div>
+       <!--  </div> --> <!-- auth div -->
+
+            <!-- a div wasn't closed here check with btns show-more etc. later -->
 
         </section>
 
@@ -135,8 +118,8 @@
     </div>
 
 </main>
-<!-- <script th:src="@{/scripts/game.js}"></script> -->
-<script th:src="@{/scripts/game.js}"></script>
+<!-- <script th:src="@{/scripts/game.js}"></script> switch between Playthroughs and Comments - show/hide-->
+<script th:src="@{/scripts/comments.js}"></script> <!-- for REST controller -->
 
 </body>
 

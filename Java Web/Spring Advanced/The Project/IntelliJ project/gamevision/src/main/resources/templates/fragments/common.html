@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- for device scaling -->
 
     <!-- for the scripts to work -->
-    <meta name="_csrf" th:content="${_csrf.token}" />
+    <!-- todo check naming here with the scripts CANNOT BE FOUND-->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}" />
 
     <!-- FIXME: Bootstrap is fickle without the CDN, carousel and some CSS get screwed, see if you can avoid CDN -->
@@ -44,6 +45,18 @@
 
     <title>GameVision</title>
     <link rel="shortcut icon" href="images/icons/favicon.ico"/>
+
+    <!--These DON'T fix csrf and my controllers not getting activated / no JSON, they are for the weather data? -->
+    <!--
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+          integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+          crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+            integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+            crossorigin=""></script>
+    -->
+
+
 </head>
 
 <body>

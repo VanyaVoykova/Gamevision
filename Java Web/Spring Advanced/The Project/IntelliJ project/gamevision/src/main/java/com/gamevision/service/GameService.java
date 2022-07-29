@@ -25,4 +25,8 @@ public interface GameService {
 
     String getGameTitleById(Long id);
 
+    GameEntity getGameById(Long id);
+
+    GameEntity saveGame(GameEntity gameEntity);
+
 }

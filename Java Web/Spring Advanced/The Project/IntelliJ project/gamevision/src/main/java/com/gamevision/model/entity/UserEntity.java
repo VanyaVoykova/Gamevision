@@ -47,7 +47,6 @@ public class UserEntity extends BaseEntity {
 
 
 
-
     public UserEntity() {
     }
 

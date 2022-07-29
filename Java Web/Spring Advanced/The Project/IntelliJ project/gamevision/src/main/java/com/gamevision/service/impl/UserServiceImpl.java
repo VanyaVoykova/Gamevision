@@ -1,5 +1,6 @@
 package com.gamevision.service.impl;
 
+import com.gamevision.errorhandling.exceptions.UserNotFoundException;
 import com.gamevision.model.binding.UserRegisterBindingModel;
 import com.gamevision.model.entity.*;
 //import com.gamevision.model.mappers.UserMapper;
@@ -21,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 
 //No separate AuthenticationService, register is here, login is handled
 @Service
@@ -91,7 +91,6 @@ public class UserServiceImpl implements UserService {
                 .setAuthentication(auth);
 
     }
-
 
 
     //=============================================
@@ -187,6 +186,8 @@ public class UserServiceImpl implements UserService {
     //===========================================
     //Auxiliary methods
 
+    //TODO: check if throwing is needed
+
     @Override
     public boolean isUserNameFree(String username) {
         return userRepository.findByUsernameIgnoreCase(username).isEmpty();
@@ -198,8 +199,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserEntity> findUserById(Long id) {
-        return userRepository.findById(id);
+    public UserEntity findUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+    }
+
+    @Override
+    public UserEntity findUserByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
     }
 
 

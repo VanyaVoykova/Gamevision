@@ -4,20 +4,18 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "games")
 public class GameEntity extends BaseEntity {
 
-    @Column(nullable = false)
+    @NotBlank
     @Size(min = 2, max = 50)
     private String title;
 
-    @NotNull
     @NotBlank
-    @Column(name="title_image_url")
+    @Column(name = "title_image_url")
     private String titleImageUrl;
 
     @Column(nullable = false, columnDefinition = "TEXT")
@@ -37,8 +35,8 @@ public class GameEntity extends BaseEntity {
     @NotNull
     private UserEntity addedBy;
 
-    @OneToMany(fetch = FetchType.EAGER) //One game can have many comments
-    private Set<CommentEntity> comments;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER) //One game can have many comments
+    private Set<CommentEntity> comments; //got to use GameCommentEntity, no polymorphism possible with JPA, got to have separate entities
 
     //TODO: rating (with stars)
 

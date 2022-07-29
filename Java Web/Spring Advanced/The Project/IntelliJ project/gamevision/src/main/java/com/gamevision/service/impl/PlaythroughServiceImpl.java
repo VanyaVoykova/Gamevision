@@ -1,7 +1,6 @@
 package com.gamevision.service.impl;
 
-import com.gamevision.exceptions.GameNotFoundException;
-import com.gamevision.exceptions.UserNotFoundException;
+import com.gamevision.errorhandling.exceptions.GameNotFoundException;
 import com.gamevision.model.entity.GameEntity;
 import com.gamevision.model.entity.PlaythroughEntity;
 import com.gamevision.model.entity.UserEntity;

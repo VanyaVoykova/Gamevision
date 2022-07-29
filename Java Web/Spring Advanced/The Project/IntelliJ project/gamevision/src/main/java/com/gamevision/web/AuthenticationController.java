@@ -25,7 +25,6 @@ public class AuthenticationController { //REGISTER AND LOGIN
         this.modelMapper = modelMapper;
     }
 
-    //Register TODO
     @GetMapping("/users/register")
     public String register() {
         return "register";
@@ -44,7 +43,6 @@ public class AuthenticationController { //REGISTER AND LOGIN
             return "redirect:/users/register";
 
 
-            //TODO how to show the error messages???
         } else if (!isUserNameFree) {
             redirectAttributes.addFlashAttribute("usernameTaken", true);
             redirectAttributes.addFlashAttribute("userRegisterBindingModel", userRegisterBindingModel);

@@ -1,9 +1,8 @@
 package com.gamevision.model.view;
 
 public class CommentViewModel {
-    private Long id;
-    private Long userId;
-    private String username;
+    private Long id; //commment id
+    private String authorUsername; //just author's username, so we can easily display the author's name, i/o just having the author's id
     private String text;
     private int likesCounter;
 
@@ -19,23 +18,15 @@ public class CommentViewModel {
         return this;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getAuthorUsername() {
+        return authorUsername;
     }
 
-    public CommentViewModel setUserId(Long userId) {
-        this.userId = userId;
+    public CommentViewModel setAuthorUsername(String authorUsername) {
+        this.authorUsername = authorUsername;
         return this;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public CommentViewModel setUsername(String username) {
-        this.username = username;
-        return this;
-    }
 
     public String getText() {
         return text;
@@ -54,4 +45,6 @@ public class CommentViewModel {
         this.likesCounter = likesCounter;
         return this;
     }
+
+
 }
