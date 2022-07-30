@@ -50,34 +50,32 @@ public class GamevisionSecurityConfiguration {
                 // everyone can download static resources (css, js, images)
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 //pages everyone can access - authentication is required only for likes and comments + admin & moderator functions
-                .antMatchers("/**").permitAll()
+                //.antMatchers("/**").permitAll()
 
 
-                .antMatchers(HttpMethod.GET, "/", "/about", "/games/all", "/games/{id}/playthroughs/all", "/users/forum", "/api/**").permitAll() ///games/view/* - view a game, * is id; removed "/api/**"
+                .antMatchers(HttpMethod.GET, "/**").permitAll() // everyone can GET               games/view/* - view a game, * is id; removed "/api/**"
+                //removed from above: "/about", "/users/forum", "/games/**", "/api/**"       "/games/{id}"   games/{id}/*",     "/games/all", "/games/{id}/playthroughs/all",
 
-                //removed from above: "/games/{id}"
-
-
-                //TODO: "api/**" is for comments - check if only authenticated users can make POST requests (post and like comments)
-//** is that the second matches the entire directory tree
-                //* only matches at the level it's specified at.
+                .antMatchers(HttpMethod.POST, "/**").authenticated() //only authenticated can POST; admin-specific and additional authorizations below
+                // removed api/games/{gameId}
 
 
-///api/{gameId}/comments/{commentId}   //TODO: NCOMMENT
-                .antMatchers("/users/profile").authenticated() //authenticated users only
-
-                //TODO fix cannot post comments, going with api/** .permitAll for now above
-                //only authenticated users can post and like comments, everybody can view comments    //TODO: NCOMMENT
-                .antMatchers(HttpMethod.POST, "/api/games/{gameId}").authenticated() //post is actually from /games/{gameId}
-
-
-                //for authenticated users only; TODO: check if this URL needs tweaking or it's Spring lingo; will be needed only if I get to the admin panel
                 // .antMatchers("/pages/moderators").hasRole(UserRoleEnum.MODERATOR.name()) ///games/{gameId}/playthroughs/add/(gameId=*{id})}" //uncomment for MODERATOR
                 .antMatchers("/pages/admins", "/games/add", "/games/{id}/edit", "/games/{id}/delete", "/games/{id}/playthroughs/add").hasRole(UserRoleEnum.ADMIN.name())
 //TODO: add for admins - users/{userId} - user management
 
                 //TODO add for profile
                 .antMatchers("/users/profile").authenticated()
+
+                //TODO: "api/**" is for comments - check if only authenticated users can make POST requests (post and like comments)
+//** is that the second matches the entire directory tree
+                //* only matches at the level it's specified at.
+
+
+                //TODO fix cannot post comments, going with api/** .permitAll for now above
+                //only authenticated users can post and like comments, everybody can view comments    //TODO: NCOMMENT
+
+                //  .antMatchers(HttpMethod.POST, "/api/games/{gameId}").authenticated() //post is actually from /games/{gameId}
 
 
                 //All other pages available for authenticated users (aka simple users)
@@ -110,12 +108,12 @@ public class GamevisionSecurityConfiguration {
                 .deleteCookies("JSESSIONID")
                 // on logout go to the home page; It shouldn't be able to fail, right?
                 .logoutSuccessUrl("/"); //redirect only after the above
-                //add ; and remove the rest if you want to use cors
+        //add ; and remove the rest if you want to use cors
 
-                //TODO: COMMENT OUT these two, add ; above
-                //cannot find csrf tokens if disabled, of course
-              // .and()
-              // .csrf().disable();
+        //TODO: COMMENT OUT these two, add ; above
+        //cannot find csrf tokens if disabled, of course
+        // .and()
+        // .csrf().disable();
 
 
         //.csrf().disable(); //if not using any cors, tokens
