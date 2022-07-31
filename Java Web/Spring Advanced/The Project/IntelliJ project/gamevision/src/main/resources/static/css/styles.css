@@ -3,26 +3,43 @@ body {
     background-color: #03080E;
 }
 
-#mainNavigationBar {
+#main-navbar {
     background-color: #131A21;
 }
 
-#leftNavbar {
+#left-navbar {
     float: left;
 }
 
-#rightNavbar {
+#right-navbar {
     float: right;
+}
+
+#center-navbar {
+    display: flex;
+    justify-content: center;
+    margin-left: 20%;
+    margin-right: 20%;
 }
 
 .side-nav li a, .navbar ul li a {
     font-size: 1vw;
     font-family: 'Electrolize', serif;
-    color: #587e91;
+    color: #7abcdd;
     text-transform: uppercase;
     display: inline;
     line-height: 38px;
     width: 100%;
+}
+
+
+/** Override Bootstrap's NAV text white background color on hover etc. */
+.nav > li > a:focus, .nav > li > a:hover {
+    text-decoration: underline;
+    font-weight: bold;
+    color: #58dde3;
+    font-size: 2vw;
+    background-color: #131a21;
 }
 
 /** display: inline   -> height: has no effect */
@@ -244,17 +261,36 @@ position: relative;
 }
 
 .buttons-container {
-    margin: 3%;
-    padding: 3%;
-    display: block;
+    margin: 1vh;
+    display: flex;
+    justify-content: center;
+    float: left;
     width: 100%;
+}
+
+/**  width: auto; fixes text overflowing from button */
+
+.link-button {
+    object-position: bottom;
+    display: inline-block;
+    float: left;
+    bottom: 0;
+    margin: 1%;
+    width: auto;
+    font-size: 115%;
+}
+
+.buttons-container button, a {
+    display: inline-block;
+    margin: 1%;
+    float: left;
 }
 
 .hr-separator {
     display: block;
     width: 100%;
-    margin-top: 3%;
-    margin-bottom: 3%;
+    margin: 1%;
+    float: left;
 }
 
 /** Playthroughs */
@@ -337,8 +373,9 @@ position: relative;
     color: lightblue;
     font-size: 12px;
 }
+
 .comment-container p {
-    font-size: 12px;
+    font-size: 15px;
 }
 
 
@@ -364,19 +401,12 @@ position: relative;
     padding: 1%;
 }
 
-/**  width: auto; fixes text overflowing from button */
 
-.link-button {
-    object-position: bottom;
-    display: inline-block;
-    float: left;
-    bottom: 0;
-    margin-right: 0;
-    margin-top: 5%;
-    margin-left: 20%;
-    width: auto;
-    font-size: 115%;
+.text-container p {
+    text-align: justify;
+    font-size: 2.5vw;
 }
+
 
 /**
 .distribute-evenly{
@@ -445,4 +475,12 @@ footer p {
 .exception-messages {
     color: red;
     font-weight: bold;
+
 }
+
+/**
+Colors
+dark blue (old nav text color) color: #587e91;
+
+
+*/

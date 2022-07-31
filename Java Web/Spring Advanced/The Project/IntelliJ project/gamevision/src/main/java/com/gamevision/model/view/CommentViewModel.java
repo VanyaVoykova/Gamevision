@@ -1,10 +1,13 @@
 package com.gamevision.model.view;
 
+import java.time.LocalDateTime;
+
 public class CommentViewModel {
     private Long id; //commment id
     private String authorUsername; //just author's username, so we can easily display the author's name, i/o just having the author's id
     private String text;
     private int likesCounter;
+    private String dateTimeCreated; //to be parsed in comments.js
 
     public CommentViewModel() {
     }
@@ -46,5 +49,12 @@ public class CommentViewModel {
         return this;
     }
 
+    public String getDateTimeCreated() {
+        return dateTimeCreated;
+    }
 
+    public CommentViewModel setDateTimeCreated(String dateTimeCreated) {
+        this.dateTimeCreated = dateTimeCreated;
+        return this;
+    }
 }

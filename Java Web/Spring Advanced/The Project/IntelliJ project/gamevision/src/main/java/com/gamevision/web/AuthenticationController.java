@@ -77,7 +77,7 @@ public class AuthenticationController { //REGISTER AND LOGIN
         return "login";
     }
 
-    //TODO: if logged in successfully, weird redirect to http://localhost:8080/ny.jpg
+
 
 
     //Takes care for login errors

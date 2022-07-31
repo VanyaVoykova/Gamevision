@@ -24,7 +24,9 @@
                  alt="Game title image">
         </figure>
 
+        <div class="text-container">
         <p th:text="*{description}"> Game description. </p>
+        </div>
 
         <div class="genres-container">
             <p>Genre(s):</p>
@@ -34,7 +36,15 @@
             </ul>
         </div>
 
+        <div class="likes-counter-div" th:text=|Likes: ${comment.likesCounter}|>Likes: ${comment.likesCounter}</div>
+
+
+            <hr class="hr-separator">
+
+
         <div class="buttons-container">
+            <!--  <a sec:authorize="isAuthenticated()" id="like*{id}" class="like-btn link-button btn btn-info w-50"></a> -->
+            <button sec:authorize="isAuthenticated()" id="like-btn" class="link-button btn btn-info w-50">Like</button>
             <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/games/{gameId}/playthroughs/add/(gameId=*{id})}"
                id="add-playthrough-btn"
                class="link-button btn btn-info w-50">Add a playthrough</a> <!-- admins only -->
@@ -48,9 +58,9 @@
 
 
     </section>
-    <hr class="hr-separator">
 
-    <!-- Playthroughs or Comments -->
+
+    <!----------------------------------------------------- Playthroughs or Comments ----------------------------------------------------------------------------------->
     <div id="playthroughs-comments-container">
 
         <!-- TODO change the two sections' style to hidden or '' depending on which button is clicked -->
@@ -70,16 +80,9 @@
             <!-- Make comment form visible only for authenticated users -->
             <!--  <div sec:authorize="isAuthenticated()">  doesn't change comments not getting saved -->
 
-            <!-- Comments submission -->
 
-            <!-- REST controller -> action="/" as submission is handled with an event listener -->
-            <!-- -- can add validation directly in the HTML> -->
-            <!--   <form id="commentForm" th:method="POST" th:action="@{/comments/${game.id}}"> -->
-            <!--  <form id="commentForm" th:method="POST" th:action="@{/api/{gameId}/comments}"> -->
-            <!-- removed Thymeleaf's th -->
-            <!-- Got "415 Unsupported Media Type" with Thymeleaf's th:   403 Forbidden without it-->
-            <!--    <form id="commentForm" th:method="POST" th:action="/"> < -->
-            <!--415 url encoded error with:     <form id="commentForm" th:method="POST" th:action="@{/games/{gameId}/comments/(gameId=*{id})}">   -->
+            <!----------------------------------------------- COMMENTS SUBMISSION FORM---------------------------------------------------->
+
             <form sec:authorize="isAuthenticated()" id="commentForm" method="POST" action="/">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <!-- changed to # from "/"   action actual path is sniffed by JS through the submit event -->
@@ -106,8 +109,6 @@
                            id="postComment"
                            value="Post Comment"/>
                 </div>
-
-                <!-- TODO: will this help with 403?-->
 
                 <!-- EL1007E: Property or field 'token' cannot be found on null -->
                 <!-- <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> cannot find prop  -->

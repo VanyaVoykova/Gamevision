@@ -3,6 +3,7 @@ package com.gamevision.model.entity;
 import javax.persistence.*;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "comments")
@@ -20,6 +21,9 @@ public class CommentEntity extends BaseEntity {
 
     @PositiveOrZero
     private int likesCounter;
+
+    @Column(name = "created", nullable = false)
+    private LocalDateTime dateTimeCreated;
 
     public CommentEntity() {
     }
@@ -59,7 +63,14 @@ public class CommentEntity extends BaseEntity {
         this.likesCounter = likesCounter;
         return this;
     }
+
+    public LocalDateTime getDateTimeCreated() {
+        return dateTimeCreated;
+    }
+
+    public CommentEntity setDateTimeCreated(LocalDateTime dateTimeCreated) {
+        this.dateTimeCreated = dateTimeCreated;
+        return this;
+    }
 }
 
-//TODO: 2 types of comments: 1. for a game 2. general comments (for a topic, but topics are not currently implemented)
-//Make this a base class for all comments, then create heirs for cases 1 and 2

@@ -51,6 +51,8 @@ public class UserServiceImpl implements UserService {
 
 
     public void registerAndLogin(UserRegisterBindingModel userRegisterBindingModel) {
+        //The check for exising username is in the controller to better control the redirect attributes for validation error visualization
+
         UserRegisterServiceModel newUserSM = modelMapper.map(userRegisterBindingModel, UserRegisterServiceModel.class);
         UserEntity newUser = modelMapper.map(newUserSM, UserEntity.class);
 

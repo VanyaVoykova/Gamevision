@@ -24,6 +24,9 @@
             <small th:if="${#fields.hasErrors('username')}" th:errors="*{username}"
                    class="invalid-feedback text-danger">
                 Username error message</small>
+            <!-- @Valid BindingModel, but existing unique value in DB -->
+            <small th:if="${usernameTaken}"  class="invalid-feedback text-danger">
+                A user with that name already exists.</small>
         </div>
 
         <div class="form-group">
@@ -37,6 +40,9 @@
             <small th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
                    class="invalid-feedback text-danger">
                 Email error message</small>
+            <!-- @Valid BindingModel, but existing unique value in DB -->
+            <small th:if="${emailTaken}"  class="invalid-feedback text-danger">
+                A user with that email already exists.</small>
         </div>
 
         <div class="form-group">

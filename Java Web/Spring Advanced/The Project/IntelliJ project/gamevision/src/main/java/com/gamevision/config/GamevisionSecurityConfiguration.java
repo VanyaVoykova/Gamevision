@@ -52,16 +52,24 @@ public class GamevisionSecurityConfiguration {
                 //pages everyone can access - authentication is required only for likes and comments + admin & moderator functions
                 //.antMatchers("/**").permitAll()
 
+                //The only POST accessible to unauthenticated users
+                .antMatchers(HttpMethod.POST, "/users/register").anonymous()
 
                 .antMatchers(HttpMethod.GET, "/**").permitAll() // everyone can GET               games/view/* - view a game, * is id; removed "/api/**"
                 //removed from above: "/about", "/users/forum", "/games/**", "/api/**"       "/games/{id}"   games/{id}/*",     "/games/all", "/games/{id}/playthroughs/all",
+
 
                 .antMatchers(HttpMethod.POST, "/**").authenticated() //only authenticated can POST; admin-specific and additional authorizations below
                 // removed api/games/{gameId}
 
 
+
+
+
                 // .antMatchers("/pages/moderators").hasRole(UserRoleEnum.MODERATOR.name()) ///games/{gameId}/playthroughs/add/(gameId=*{id})}" //uncomment for MODERATOR
                 .antMatchers("/pages/admins", "/games/add", "/games/{id}/edit", "/games/{id}/delete", "/games/{id}/playthroughs/add").hasRole(UserRoleEnum.ADMIN.name())
+                //TODO: for some reason "/games/add" can be acessed by guests????? Shouldn't the POST antMatchers above be overridden?
+
 //TODO: add for admins - users/{userId} - user management
 
                 //TODO add for profile
