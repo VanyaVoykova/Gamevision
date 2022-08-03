@@ -22,7 +22,11 @@ body {
     margin-right: 20%;
 }
 
-.side-nav li a, .navbar ul li a {
+#admin-navbar {
+    margin-left: 33%;
+}
+
+.side-nav li a, .navbar ul li a, #logout-btn {
     font-size: 1vw;
     font-family: 'Electrolize', serif;
     color: #7abcdd;
@@ -34,12 +38,16 @@ body {
 
 
 /** Override Bootstrap's NAV text white background color on hover etc. */
-.nav > li > a:focus, .nav > li > a:hover {
+.nav > li > a:focus, .nav > li > a:hover, .input-btn a:focus, .input-btn a:hover{
     text-decoration: underline;
     font-weight: bold;
     color: #58dde3;
-    font-size: 2vw;
+    font-size: 1.2em;
     background-color: #131a21;
+}
+
+#logout-btn {
+    margin-top: 10%;
 }
 
 /** display: inline   -> height: has no effect */

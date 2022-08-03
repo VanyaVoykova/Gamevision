@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface GameService {
     Page<GameCardViewModel> getAllGames(Pageable pageable);
 
-    void addGame(GameAddServiceModel gameAddServiceModel);
+    GameAddServiceModel addGame(GameAddServiceModel gameAddServiceModel);
     void editGame(Long gameId, GameEditServiceModel gameEditServiceModel);
 
     GameEntity getGameByTitle(String gameTitle);

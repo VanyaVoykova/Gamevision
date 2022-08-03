@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
 
             initAdmin(List.of(adminRole, moderatorRole));
             initModerator(List.of(moderatorRole));
-            initUser(List.of());
+            initUser(List.of()); //only the other two need specific roles
         }
     }
 

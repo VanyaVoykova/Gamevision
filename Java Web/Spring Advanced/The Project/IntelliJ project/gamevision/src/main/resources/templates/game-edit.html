@@ -60,9 +60,10 @@
 
       <!-- todo: keep selected boxes:   for (chosenGenre : ${chosenGenres}) if g.getGenreName().equals(chosenGenre.getGenreName())) checkbox: checked -->
       <label class="form-check-label" th:for="checkbox" th:text="${g}">Genre(s)</label>
-      <input class="form-check-input" type="checkbox" th:id="rpg-checkbox" name="genre" th:value="${g}"
-             th:checked="${chosenGenres != null and #lists.contains(chosenGenres, g)}"
-      />
+      <input class="form-check-input" type="checkbox" th:id="rpg-checkbox" name="genre" th:value="${g}"/>
+      <!--    th:checked="${chosenGenres != null and #lists.contains(chosenGenres, g)}" -->
+
+
       <!-- Type conversion problem, cannot convert from null to boolean -->
       <!-- Trying to check if chosenGenres is null and if it isn't check if it contains the genre
 

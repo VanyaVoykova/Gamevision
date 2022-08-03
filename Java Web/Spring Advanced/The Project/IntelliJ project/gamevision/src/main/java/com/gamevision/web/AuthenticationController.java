@@ -2,7 +2,6 @@ package com.gamevision.web;
 
 import com.gamevision.model.binding.UserRegisterBindingModel;
 import com.gamevision.service.UserService;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,11 +17,10 @@ import java.security.Principal;
 @Controller
 public class AuthenticationController { //REGISTER AND LOGIN
     private final UserService userService;
-    private final ModelMapper modelMapper; //TODO check if necessary
 
-    public AuthenticationController(UserService userService, ModelMapper modelMapper) {
+    public AuthenticationController(UserService userService) {
         this.userService = userService;
-        this.modelMapper = modelMapper;
+
     }
 
     @GetMapping("/users/register")
@@ -95,7 +93,7 @@ public class AuthenticationController { //REGISTER AND LOGIN
 
     //Better put this in UserController
     @GetMapping("/users/profile")//Principal (userdata for current user) - from SS, Model from Spring
-    public String profile(Principal principal, Model model) {
+    public String profile(Principal principal, Model model) { //todo check if ModelMapper will be necessary here, otherwise this controller doesn't need it
 //TODO
 
         return "user-profile";

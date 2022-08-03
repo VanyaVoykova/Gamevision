@@ -49,8 +49,9 @@ public class GameServiceImpl implements GameService {
                 .map(this::mapGameEntityToCardView);
     }
 
+
     @Override
-    public void addGame(GameAddServiceModel gameAddServiceModel) {
+    public  GameAddServiceModel addGame(GameAddServiceModel gameAddServiceModel) {
         //Check if title doesn't already exist - must be unique!
         GameEntity existingGameWithTitle = gameRepository.findByTitle(gameAddServiceModel.getTitle()).orElse(null);
         if (existingGameWithTitle != null) { //game with that name EXISTS
@@ -85,6 +86,8 @@ public class GameServiceImpl implements GameService {
         //Adds playthrough to PlaythroughRepository, then gets the newly added game from the repo and adds the playthrough to it; throws exception when game not found
         playthroughService.addPlaythrough(addedGameFromRepo.getId(), gameAddServiceModel.getPlaythroughTitle(), gameAddServiceModel.getPlaythroughVideoUrl(), gameAddServiceModel.getPlaythroughDescription()); //add UserDetails in service
 
+        return gameAddServiceModel; //trying not to expose the entity elsewhere (in this case the @Aspect for logging)
+
     }
 
     @Override //Doesn't include playthroughs
@@ -93,10 +96,10 @@ public class GameServiceImpl implements GameService {
         // 1. Pull orignal GameEntity to be edited from the repo
         GameEntity gameToEdit = gameRepository.findById(gameId).orElseThrow(GameNotFoundException::new);
         // 2. check the new title - if another gameEntity (with ANOTHER id) does not have it in order to keep titles UNIQUE
-        GameEntity existingGameWithNewTitle = gameRepository.findByTitle(gameEditServiceModel.getTitle()).orElse(null); //if null -> OK, proceed
+        GameEntity existingGameToEdit = gameRepository.findByTitle(gameEditServiceModel.getTitle()).orElse(null); //if null -> OK, proceed
 
-        if (existingGameWithNewTitle != null) {
-            throw new GameTitleExistsException(); //has static final message
+        if (existingGameToEdit == null) {
+            throw new GameNotFoundException(); //has static final message
         }
 
         //Clear to go, set new fields

@@ -9,12 +9,14 @@ public class GamevisionUserDetails implements UserDetails {
     private final String username;
     private final String password;
     private final String email;
+    private final boolean isActive;
     private final Collection<GrantedAuthority> authorities;
 
-    public GamevisionUserDetails(String username, String password, String email, Collection<GrantedAuthority> authorities) {
+    public GamevisionUserDetails(String username, String password, String email, boolean isActive, Collection<GrantedAuthority> authorities) {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.isActive = isActive;
         this.authorities = authorities;
     }
 
@@ -35,24 +37,27 @@ public class GamevisionUserDetails implements UserDetails {
     }
 
     @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return this.isActive;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return this.isActive;
+    }
+
+
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.isActive;
     }
+
 
     @Override
     public String toString() {
@@ -62,4 +67,6 @@ public class GamevisionUserDetails implements UserDetails {
                 ", authorities=" + authorities +
                 '}';
     }
+
+
 }

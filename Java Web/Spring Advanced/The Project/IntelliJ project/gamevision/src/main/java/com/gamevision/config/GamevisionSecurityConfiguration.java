@@ -67,7 +67,7 @@ public class GamevisionSecurityConfiguration {
 
 
                 // .antMatchers("/pages/moderators").hasRole(UserRoleEnum.MODERATOR.name()) ///games/{gameId}/playthroughs/add/(gameId=*{id})}" //uncomment for MODERATOR
-                .antMatchers("/pages/admins", "/games/add", "/games/{id}/edit", "/games/{id}/delete", "/games/{id}/playthroughs/add").hasRole(UserRoleEnum.ADMIN.name())
+                .antMatchers("/admin", "/games/add", "/games/{id}/edit", "/games/{id}/delete", "/games/{id}/playthroughs/add").hasRole(UserRoleEnum.ADMIN.name())
                 //TODO: for some reason "/games/add" can be acessed by guests????? Shouldn't the POST antMatchers above be overridden?
 
 //TODO: add for admins - users/{userId} - user management

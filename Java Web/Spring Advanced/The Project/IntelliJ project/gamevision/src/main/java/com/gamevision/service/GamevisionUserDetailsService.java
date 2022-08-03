@@ -32,6 +32,7 @@ public class GamevisionUserDetailsService implements UserDetailsService {
                 userEntity.getUsername(),
                 userEntity.getPassword(),
                 userEntity.getEmail(),
+                userEntity.isActive(),
                 userEntity.getUserRoles().stream()
                         .map(this::mapGrantedAuthority)
                         .toList()

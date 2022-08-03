@@ -8,7 +8,6 @@ import com.gamevision.model.view.CommentViewModel;
 import com.gamevision.model.view.PlaythroughViewModel;
 import com.gamevision.repository.GameRepository;
 import com.gamevision.repository.PlaythroughRepository;
-import com.gamevision.repository.UserRepository;
 import com.gamevision.service.PlaythroughService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -22,13 +21,11 @@ import java.util.stream.Collectors;
 public class PlaythroughServiceImpl implements PlaythroughService {
     private final PlaythroughRepository playthroughRepository;
     private final GameRepository gameRepository;
-    private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    public PlaythroughServiceImpl(PlaythroughRepository playthroughRepository, GameRepository gameRepository, UserRepository userRepository, ModelMapper modelMapper) {
+    public PlaythroughServiceImpl(PlaythroughRepository playthroughRepository, GameRepository gameRepository, ModelMapper modelMapper) {
         this.playthroughRepository = playthroughRepository;
         this.gameRepository = gameRepository;
-        this.userRepository = userRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -56,6 +53,8 @@ public class PlaythroughServiceImpl implements PlaythroughService {
         gameRepository.save(game); //HAVE TO "UPDATE" the GameEntity like THIS!!!
     }
 
+    //TBI: Maybe edit some day
+
     @Override
     public List<PlaythroughViewModel> getAllPlaythroughsForGame(Long gameId) {
         GameEntity game = gameRepository.findById(gameId).orElseThrow(GameNotFoundException::new);
@@ -75,7 +74,7 @@ public class PlaythroughServiceImpl implements PlaythroughService {
                     .setLikesCounter(entity.getLikesCounter())
                     .setComments(entity.getComments().stream()
                             .map(commentEntity -> modelMapper.map(commentEntity, CommentViewModel.class)).collect(Collectors.toList()));
-
+//TBI: comments for playthroughs
             playthroughs.add(viewModel);
 
         }
