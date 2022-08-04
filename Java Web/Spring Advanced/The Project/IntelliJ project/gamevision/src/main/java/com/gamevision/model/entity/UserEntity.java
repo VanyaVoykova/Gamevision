@@ -32,7 +32,7 @@ public class UserEntity extends BaseEntity {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @Column(nullable = false)
-    private List<UserRoleEntity> userRoles;
+    private Set<UserRoleEntity> userRoles;
 
     @Column(nullable = false, name = "is_active")
     private boolean isActive;
@@ -87,11 +87,11 @@ public class UserEntity extends BaseEntity {
         return this;
     }
 
-    public List<UserRoleEntity> getUserRoles() {
+    public Set<UserRoleEntity> getUserRoles() {
         return userRoles;
     }
 
-    public UserEntity setUserRoles(List<UserRoleEntity> userRoles) {
+    public UserEntity setUserRoles(Set<UserRoleEntity> userRoles) {
         this.userRoles = userRoles;
         return this;
     }

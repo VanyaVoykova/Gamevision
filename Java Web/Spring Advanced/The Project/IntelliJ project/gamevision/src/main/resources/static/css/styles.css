@@ -480,10 +480,11 @@ footer p {
 }
 
 
-.exception-messages {
+/** ---------------------------------ERROR VISUALIZATION----------------------------- */
+
+.exception-message {
     color: red;
     font-weight: bold;
-
 }
 
 /**

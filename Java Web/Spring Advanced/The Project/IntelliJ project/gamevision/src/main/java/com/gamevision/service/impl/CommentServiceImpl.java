@@ -53,9 +53,13 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentViewModel addComment(CommentAddServiceModel commentAddServiceModel) {
 
+        //todo return ServiceModel instead, don't put foreign entities here
         UserEntity author = userService.findUserByUsername(commentAddServiceModel.getAuthorName());//throws UserNotFound
 
+        //todo return ServiceModel instead, don't put foreign entities here
         GameEntity game = gameService.getGameById(commentAddServiceModel.getGameId()); //throws GameNotFound
+
+
         CommentEntity commentEntity = new CommentEntity();
         commentEntity
                 .setAuthor(author)

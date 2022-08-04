@@ -6,6 +6,8 @@ import com.gamevision.model.entity.*;
 //import com.gamevision.model.mappers.UserMapper;
 import com.gamevision.model.enums.UserRoleEnum;
 import com.gamevision.model.servicemodels.UserRegisterServiceModel;
+import com.gamevision.model.servicemodels.UserServiceModel;
+import com.gamevision.model.view.UserAdministrationViewModel;
 import com.gamevision.repository.ProfilePictureRepository;
 import com.gamevision.repository.UserRepository;
 import com.gamevision.repository.UserRoleRepository;
@@ -22,6 +24,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 //No separate AuthenticationService, register is here, login is handled
 @Service
@@ -60,17 +64,14 @@ public class UserServiceImpl implements UserService {
         newUser.setPassword(passwordEncoder.encode(userRegisterBindingModel.getPassword()));
 
         //Set default profile picture
-        ProfilePicture defaultPic = new ProfilePicture();
-        defaultPic.setUrl("/static/images/default-blank-profile-picture-640x640.png");
-        //Save the ProfilePicture to the DB first!!!! Otherwise: object references an unsaved transient instance - save the transient instance before flushing error!
-        profilePictureRepository.save(defaultPic);
+        ProfilePicture defaultPic = getProfilePicture();
 
         newUser.setProfilePicture(defaultPic);
 
         //Get it from the REPOOOOOo
         UserRoleEntity defaultRole = userRoleRepository.findByName(UserRoleEnum.USER).orElse(null); //should never be null
         assert defaultRole != null; // to keep the IDE happy
-        newUser.setUserRoles(List.of(defaultRole));
+        newUser.setUserRoles(Set.of(defaultRole));
 
         newUser.setActive(true);
 
@@ -106,17 +107,26 @@ public class UserServiceImpl implements UserService {
             UserRoleEntity adminRole = userRoleRepository.findByName(UserRoleEnum.ADMIN).orElse(null); //should never be null
             assert adminRole != null; // to keep the IDE happy
 
-            UserRoleEntity moderatorRole = userRoleRepository.findByName(UserRoleEnum.MODERATOR).orElse(null); //should never be null
-            assert moderatorRole != null; // to keep the IDE happy
+            //TBI
+            // UserRoleEntity moderatorRole = userRoleRepository.findByName(UserRoleEnum.MODERATOR).orElse(null); //should never be null
+            // assert moderatorRole != null; // to keep the IDE happy
+
+            UserRoleEntity userRole = userRoleRepository.findByName(UserRoleEnum.USER).orElse(null); //should never be null
+            assert userRole != null;
 
 
-            initAdmin(List.of(adminRole, moderatorRole));
-            initModerator(List.of(moderatorRole));
-            initUser(List.of()); //only the other two need specific roles
+            initAdmin(Set.of(userRole, adminRole));
+            //  initModerator(List.of(moderatorRole));
+            initUser(Set.of(userRole)); //only the other two need specific roles
+
+            //Can be left like this since only admins have specific authorization:
+            // initAdmin(List.of(adminRole, moderatorRole));
+            //            initModerator(List.of(moderatorRole));
+            //            initUser(List.of()); //only the other two need specific roles
         }
     }
 
-    private void initAdmin(List<UserRoleEntity> roles) {
+    private void initAdmin(Set<UserRoleEntity> roles) {
         UserEntity admin = new UserEntity()
                 .setUsername("Admin")
                 .setPassword(passwordEncoder.encode(adminPass))
@@ -124,10 +134,7 @@ public class UserServiceImpl implements UserService {
                 .setUserRoles(roles);
 
         //Set the rest of the fields - WET but not much time to fix TODO: clean up, DRY
-        ProfilePicture adminPic = new ProfilePicture();
-        adminPic.setUrl("/static/images/default-blank-profile-picture-640x640.png"); //TODO get a different default pic for admins
-        //Save the ProfilePicture to the DB first!!!! Otherwise: "object references an unsaved transient instance - save the transient instance before flushing" error!
-        profilePictureRepository.save(adminPic);
+        ProfilePicture adminPic = getProfilePicture();
 
         admin.setProfilePicture(adminPic);
 
@@ -139,7 +146,8 @@ public class UserServiceImpl implements UserService {
         userRepository.save(admin);
     }
 
-    private void initModerator(List<UserRoleEntity> roles) {
+
+    private void initModerator(Set<UserRoleEntity> roles) {
         UserEntity moderator = new UserEntity()
                 .setUsername("Moderator")
                 .setPassword(passwordEncoder.encode(adminPass))
@@ -147,10 +155,7 @@ public class UserServiceImpl implements UserService {
                 .setUserRoles(roles);
 
         //Set the rest of the fields
-        ProfilePicture moderatorPic = new ProfilePicture();
-        moderatorPic.setUrl("/static/images/default-blank-profile-picture-640x640.png"); //TODO get a different default pic for admins
-        //Save the ProfilePicture to the DB first!!!! Otherwise: object references an unsaved transient instance - save the transient instance before flushing error!
-        profilePictureRepository.save(moderatorPic);
+        ProfilePicture moderatorPic = getProfilePicture();
 
         moderator.setProfilePicture(moderatorPic);
 
@@ -162,7 +167,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(moderator);
     }
 
-    private void initUser(List<UserRoleEntity> roles) {
+    private void initUser(Set<UserRoleEntity> roles) {
         UserEntity user = new UserEntity()
                 .setUserRoles(roles)
                 .setUsername("User")
@@ -171,9 +176,7 @@ public class UserServiceImpl implements UserService {
 
 
         //Set the rest of the fields
-        ProfilePicture userPic = new ProfilePicture();
-        userPic.setUrl("/static/images/default-blank-profile-picture-640x640.png"); //TODO: get a different default pic for admins
-        profilePictureRepository.save(userPic);
+        ProfilePicture userPic = getProfilePicture();
 
         user.setProfilePicture(userPic);
 
@@ -189,6 +192,14 @@ public class UserServiceImpl implements UserService {
     //Auxiliary methods
 
     //TODO: check if throwing is needed
+
+    private ProfilePicture getProfilePicture() {
+        ProfilePicture adminPic = new ProfilePicture();
+        adminPic.setUrl("/static/images/default-blank-profile-picture-640x640.png"); //TODO REPLACE HARDCODE and get a different default pic for admins
+        //Save the ProfilePicture to the DB first!!!! Otherwise: "object references an unsaved transient instance - save the transient instance before flushing" error!
+        profilePictureRepository.save(adminPic);
+        return adminPic;
+    }
 
     @Override
     public boolean isUserNameFree(String username) {
@@ -207,8 +218,38 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity findUserByUsername(String username) {
+        //todo don't return the entity directly in controller/other service - replace with getUserByUsername below if time permits
         return userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
     }
+
+
+    @Override
+    public UserServiceModel getUserSmByUsername(String username) {
+        UserEntity entity = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        return new UserServiceModel()
+                .setId(entity.getId())
+                .setUsername(entity.getUsername())
+                .setEmail(entity.getEmail())
+                .setProfilePictureUrl(entity.getProfilePicture().getUrl())
+                .setUserRoles(entity.getUserRoles().stream().map(roleEntity -> roleEntity.getName().name()).collect(Collectors.toList()))
+                .setActive(entity.isActive())
+                .setGames(entity.getGames().stream().map(GameEntity::getTitle).collect(Collectors.toList()))
+                .setPlaythroughs(entity.getFavouritePlaythroughs().stream().map(PlaythroughEntity::getTitle).collect(Collectors.toList()));
+
+    }
+
+    @Override
+    public UserAdministrationViewModel getUserVmByUsername(String username) {
+        UserEntity entity = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        return new UserAdministrationViewModel()
+                .setId(entity.getId())
+                .setUsername(entity.getUsername())
+                .setUserRoles(entity.getUserRoles().stream().map(roleEntity -> roleEntity.getName().name()).collect(Collectors.toList()))
+                .setActive(entity.isActive());
+
+    }
+
+    //todo TBI for better UX, display a message when a banned user attempts to login
 
 
 }
