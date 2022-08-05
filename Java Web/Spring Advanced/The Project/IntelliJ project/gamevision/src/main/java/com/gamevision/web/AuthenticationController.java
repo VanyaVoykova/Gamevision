@@ -2,6 +2,7 @@ package com.gamevision.web;
 
 import com.gamevision.model.binding.UserRegisterBindingModel;
 import com.gamevision.service.UserService;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -69,32 +70,34 @@ public class AuthenticationController { //REGISTER AND LOGIN
     }
 
     //==================================================================
-//Login - just this, SS should handle the rest, no login in UserServiceImpl/AuthenticationService
+//Login - ONLY THIS GET, SS should handle the rest, no login in UserServiceImpl/AuthenticationService
     @GetMapping("/users/login")
     public String login() {
+
         return "login";
     }
+//In SS config:
+     //  .antMatchers(HttpMethod.POST, "/users/register", "/users/login").anonymous()
 
 
-
-
+//Todo: doesn't work here; Mobilelele is w/o one
     //Takes care for login errors
-    //Should be post mapping!
+    //Should be post mapping!  Original: "/users/login-error"
     @PostMapping("/users/login-error")
     public String onFailedLogin(
             @ModelAttribute(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY) String username,
             RedirectAttributes redirectAttributes) {
-
+//
         redirectAttributes.addFlashAttribute(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY, username);
         redirectAttributes.addFlashAttribute("bad_credentials", true);
-
+//
         return "redirect:/users/login";
     }
 
     //Better put this in UserController
     @GetMapping("/users/profile")//Principal (userdata for current user) - from SS, Model from Spring
     public String profile(Principal principal, Model model) { //todo check if ModelMapper will be necessary here, otherwise this controller doesn't need it
-//TODO
+   //TODO
 
         return "user-profile";
 

@@ -5,10 +5,12 @@ import com.gamevision.errorhandling.exceptions.GameTitleExistsException;
 import com.gamevision.errorhandling.exceptions.UserNotFoundException;
 import com.gamevision.model.entity.GameEntity;
 import com.gamevision.model.entity.GenreEntity;
+import com.gamevision.model.entity.PlaythroughEntity;
 import com.gamevision.model.entity.UserEntity;
 import com.gamevision.model.enums.GenreNameEnum;
 import com.gamevision.model.servicemodels.GameAddServiceModel;
 import com.gamevision.model.servicemodels.GameEditServiceModel;
+import com.gamevision.model.user.GamevisionUserDetails;
 import com.gamevision.model.view.GameCardViewModel;
 import com.gamevision.model.view.GameViewModel;
 import com.gamevision.repository.GameRepository;
@@ -19,6 +21,7 @@ import com.gamevision.service.PlaythroughService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -51,7 +54,7 @@ public class GameServiceImpl implements GameService {
 
 
     @Override
-    public  GameAddServiceModel addGame(GameAddServiceModel gameAddServiceModel) {
+    public GameAddServiceModel addGame(GameAddServiceModel gameAddServiceModel) {
         //Check if title doesn't already exist - must be unique!
         GameEntity existingGameWithTitle = gameRepository.findByTitle(gameAddServiceModel.getTitle()).orElse(null);
         if (existingGameWithTitle != null) { //game with that name EXISTS
@@ -76,7 +79,7 @@ public class GameServiceImpl implements GameService {
         gameToAdd.setPlaythroughs(new HashSet<>());
         gameToAdd.setComments(new LinkedHashSet<>()); //Linked to keep order of addition
 
-        //TODO probably one final try/catch if something still goes wrong - e.g. description somehow too long (GameEntity's description has @Column(columnDefinition = "TEXT"))
+        //TODO probably one final try/catch if something still goes wrong - e.g. description somehow too long (GameEntity's description has @Lob
         gameRepository.save(gameToAdd); //so that GameRepository grants it an ID - PlaythroughEntity has to be created with a gameID
 
         GameEntity addedGameFromRepo = gameRepository.findByTitle(gameToAdd.getTitle()).orElseThrow(GameNotFoundException::new); //shouldn't be null
@@ -84,7 +87,8 @@ public class GameServiceImpl implements GameService {
         //playthrough data should be validated by the GameAddBindingModel, it holds both game and playthrough data...
 
         //Adds playthrough to PlaythroughRepository, then gets the newly added game from the repo and adds the playthrough to it; throws exception when game not found
-        playthroughService.addPlaythrough(addedGameFromRepo.getId(), gameAddServiceModel.getPlaythroughTitle(), gameAddServiceModel.getPlaythroughVideoUrl(), gameAddServiceModel.getPlaythroughDescription()); //add UserDetails in service
+        PlaythroughEntity savedPlaythrough = playthroughService.addPlaythroughWhenAddingGame(addedGameFromRepo.getId(), gameAddServiceModel.getPlaythroughTitle(), gameAddServiceModel.getPlaythroughVideoUrl(), gameAddServiceModel.getPlaythroughDescription(), gameAddServiceModel.getAddedBy()); //add UserDetails in service
+        addedGameFromRepo.getPlaythroughs().add(savedPlaythrough);
 
         return gameAddServiceModel; //trying not to expose the entity elsewhere (in this case the @Aspect for logging)
 
@@ -96,11 +100,13 @@ public class GameServiceImpl implements GameService {
         // 1. Pull orignal GameEntity to be edited from the repo
         GameEntity gameToEdit = gameRepository.findById(gameId).orElseThrow(GameNotFoundException::new);
         // 2. check the new title - if another gameEntity (with ANOTHER id) does not have it in order to keep titles UNIQUE
-        GameEntity existingGameToEdit = gameRepository.findByTitle(gameEditServiceModel.getTitle()).orElse(null); //if null -> OK, proceed
+        GameEntity existingGameWithSameTitleAsTheNewTitle = gameRepository.findByTitle(gameEditServiceModel.getTitle()).orElse(null); //if null -> OK, proceed
 
-        if (existingGameToEdit == null) {
-            throw new GameNotFoundException(); //has static final message
+        //Ensure it's a DIFFERENT game, so you don't get "A game with that title already exists." because you found the game you want to edit (same id).
+        if (existingGameWithSameTitleAsTheNewTitle != null && !Objects.equals(existingGameWithSameTitleAsTheNewTitle.getId(), gameToEdit.getId())) {
+            throw new GameTitleExistsException(); //has static final message
         }
+
 
         //Clear to go, set new fields
         gameToEdit.setTitle(gameEditServiceModel.getTitle())
@@ -162,6 +168,11 @@ public class GameServiceImpl implements GameService {
     public GameEntity saveGame(GameEntity gameEntity) {
 
         return gameRepository.save(gameEntity);
+    }
+
+    @Override
+    public void deleteGameById(Long id) {
+        gameRepository.deleteById(id);
     }
 
 

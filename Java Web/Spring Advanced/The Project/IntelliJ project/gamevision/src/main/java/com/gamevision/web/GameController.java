@@ -36,7 +36,6 @@ public class GameController {
     }
 
 
-
     //Skip pagination for now?
 //FIXME - fix Paging in TEMPLATE
     @GetMapping("/games/all")
@@ -64,7 +63,6 @@ public class GameController {
     }
 
 
-
     //For ADMINS:
 
     @GetMapping("/games/add")
@@ -72,9 +70,9 @@ public class GameController {
     public String addGame(Model model) { //model here to add attribute below
         //add attribute here i/o with @ModelAttribute on a separate method, it's short enough
         //Will add it with @ModelAttribute, so it's accessible for all here
-     //  if (!model.containsAttribute("gameAddBindingModel")) {
-     //      model.addAttribute("gameAddBindingModel", new GameAddBindingModel());
-     //  }
+        //  if (!model.containsAttribute("gameAddBindingModel")) {
+        //      model.addAttribute("gameAddBindingModel", new GameAddBindingModel());
+        //  }
 
         //Text for the genre checkboxes labels
         //   List<String> allGenres = GenreNameEnum.values().stream().collect(Collectors.toList());
@@ -108,7 +106,6 @@ public class GameController {
 //Nope, KISS, let admin add just one walkthrough upon adding a game for now
 
 
-        //TODO: check if error messages are correct for UserNotFoundException and GameNotFoundException
         //genre.equals("") || genre.isEmpty()) {
         try {
             if (genre == null) { //TODO: doesn't cut it, it tries to create it without genres! It's ok with chosen genres.
@@ -169,18 +166,19 @@ public class GameController {
 
     @PostMapping("/games/{id}/edit") //"genre" is the <input> name, so the request param's name has to be the same
     public String editGameSubmit(@PathVariable("id") Long id, @RequestParam(required = false) List<String> genre, GameEditBindingModel gameEditBindingModel, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
-//FIXME: ERROR when NO genre is chosen:
+
         List<String> chosenGenres = genre; //need a different name from genre for the flash attribute because it's used for the checkboxes' text
 
 
         //TODO: Figure out how to keep selected genres with redirectAttributes, add it to games/add when figured out
+        System.out.println("javax.persistence.RollbackException: Error while committing the transaction" + "When editing other fields but NOT the title");
 
 
         try {
             if (genre == null) { //doesn't fix the problem with NO genres BUT at least we get an error message when no genre is selected
                 redirectAttributes.addFlashAttribute("errorMessage", "Please select at least one genre."); //no need to add to model
                 redirectAttributes.addFlashAttribute("gameEditBindingModel", gameEditBindingModel);
-               // redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.gameAddBindingModel", bindingResult);
+                // redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.gameAddBindingModel", bindingResult);
                 return "redirect:/games/" + id + "/edit";
             }
 
@@ -204,19 +202,26 @@ public class GameController {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage()); //or with model???
             System.out.println(e.getMessage());
 
-            return "redirect:/games/" + id + "/edit"; //not "redirect:/games/{id}/edit"; NOT "redirect:/games/id/edit";
+            return "redirect:/games/" + id + "/edit"; //Make sure actual id is passed here, not "redirect:/games/{id}/edit"; NOT "redirect:/games/id/edit";
         }
 
         return "redirect:/games/" + id;
 
     }
 
-    // No More @ModelAttribute, Spring Security takes care of it
+    @GetMapping("games/{id}/delete")
+    public String deleteGame(@PathVariable("id") Long id) {
+        gameService.deleteGameById(id);
+        return "redirect:/admin";
+    }
+
+
+    // No More @ModelAttribute, Spring Security takes care of it... or not
 
     //check with this just in case
-     @ModelAttribute("gameAddBindingModel")
+    @ModelAttribute("gameAddBindingModel")
     public GameAddBindingModel gameAddbindingModel() {
-       return new GameAddBindingModel();
-      }
+        return new GameAddBindingModel();
+    }
 
 }

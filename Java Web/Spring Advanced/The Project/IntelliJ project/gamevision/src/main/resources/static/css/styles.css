@@ -38,7 +38,7 @@ body {
 
 
 /** Override Bootstrap's NAV text white background color on hover etc. */
-.nav > li > a:focus, .nav > li > a:hover, .input-btn a:focus, .input-btn a:hover{
+.nav > li > a:focus, .nav > li > a:hover, .input-btn a:focus, .input-btn a:hover, #logout-btn a:hover {
     text-decoration: underline;
     font-weight: bold;
     color: #58dde3;
@@ -47,7 +47,7 @@ body {
 }
 
 #logout-btn {
-    margin-top: 10%;
+    margin-top: 0.7vh;
 }
 
 /** display: inline   -> height: has no effect */
@@ -412,7 +412,7 @@ position: relative;
 
 .text-container p {
     text-align: justify;
-    font-size: 2.5vw;
+    font-size: 1.5vw;
 }
 
 
@@ -464,14 +464,13 @@ footer {
 /** User Profile */
 
 
-footer {
+.vay-footer {
     bottom: 0;
-    text-align: left;
-    padding: 8px;
-    position: relative;
+    text-align: justify;
+    position: absolute;
     width: 100%;
-    float: right;
-    margin-top: 0;
+    padding-left: 47%;
+    float: bottom;
     justify-content: space-around;
 }
 

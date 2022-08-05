@@ -18,7 +18,8 @@ public class GameEntity extends BaseEntity {
     @Column(name = "title_image_url")
     private String titleImageUrl;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false)
+    @Lob
     @Size(min = 20)
     private String description;
 
@@ -27,7 +28,7 @@ public class GameEntity extends BaseEntity {
     @Column(nullable = false)
     private Set<GenreEntity> genres;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     //so we can easily view all playthroughs available for a game; leave it lazy for view purposes, draw the specific walkthrough when user clicks on it
     private Set<PlaythroughEntity> playthroughs;
 
@@ -35,10 +36,11 @@ public class GameEntity extends BaseEntity {
     @NotNull
     private UserEntity addedBy;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER) //One game can have many comments
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    //One game can have many comments
     private Set<CommentEntity> comments; //got to use GameCommentEntity, no polymorphism possible with JPA, got to have separate entities
 
-    //TODO: rating (with stars)
+    //todo: rating (with stars)
 
 
     public GameEntity() {

@@ -31,7 +31,7 @@ public class PlaythroughEntity extends BaseEntity {
     private UserEntity addedBy;
 
     //TODO: for when comments for playthroughs are implemented
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<CommentEntity> comments;
 
 

@@ -56,9 +56,9 @@ public class GamevisionSecurityConfiguration {
                 //TODO: for some reason "/games/add" can be accessed by guests????? Shouldn't the POST antMatchers above be overridden?
 
                 //The only POST accessible to unauthenticated users
-                .antMatchers(HttpMethod.POST, "/users/register").anonymous()
+                .antMatchers(HttpMethod.POST, "/users/register", "/users/login").anonymous()
 
-                .antMatchers(HttpMethod.GET, "/**").permitAll() // everyone can GET               games/view/* - view a game, * is id; removed "/api/**"
+                .antMatchers(HttpMethod.GET, "/**", "/games/{id}", "/games/{id}/comments").permitAll() // everyone can GET               games/view/* - view a game, * is id; removed "/api/**"
                 //removed from above: "/about", "/users/forum", "/games/**", "/api/**"       "/games/{id}"   games/{id}/*",     "/games/all", "/games/{id}/playthroughs/all",
 
 
@@ -102,10 +102,11 @@ public class GamevisionSecurityConfiguration {
                 .usernameParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY) //alternative:  .usernameParameter("username")
                 // the name of the password <form> field; naming is very important
                 .passwordParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY) //alternative:   .passwordParameter("password")
+
                 // where to go on successful login
                 .defaultSuccessUrl("/") //sometimes goes to /games ????  <- error
                 // where to go in case on failed login, just a mapping in controller is enough, no separate template needed, just redirect to login
-                .failureForwardUrl("/users/login?error=true") //("/users/login-error") or put a query param ("/users/login?error=true")
+                .failureForwardUrl("/users/login-error") //("/users/login-error") or put a query param ("/users/login?error=true")
 
                 .and()
                 // configure logout
