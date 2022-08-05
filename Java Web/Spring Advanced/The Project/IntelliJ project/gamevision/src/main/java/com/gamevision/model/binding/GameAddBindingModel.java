@@ -2,6 +2,7 @@ package com.gamevision.model.binding;
 
 
 import javax.persistence.Column;
+import javax.persistence.Lob;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -18,22 +19,21 @@ public class GameAddBindingModel {
 
     @NotBlank
     @Size(min = 20)
-    @Column(columnDefinition = "TEXT")
     private String description;
 
 
     //check boxes -> List/Set of Strings
-   // @NotEmpty the .isEmpty() check is with the bindingResult check
-   private List<String> genres;
+    // @NotEmpty the .isEmpty() check is with the bindingResult check
+    private List<String> genres;
 
 
     //TODO get Principal separately, allow it to be null here for the initial binding
-   // @NotNull //the admin who added the game - get by Principal id
-   private String addedBy; //username
+    // @NotNull //the admin who added the game - get by Principal id
+    private String addedBy; //username
 
 
 //TODO check if MM will add an empty Set<CommentEntity>
-   //Comments are added in game view
+    //Comments are added in game view
 
 
 //PLAYTHROUGH
@@ -91,14 +91,14 @@ public class GameAddBindingModel {
         return this;
     }
 
-  public String getAddedBy() {
-      return addedBy;
-  }
+    public String getAddedBy() {
+        return addedBy;
+    }
 
-  public GameAddBindingModel setAddedBy(String username) {
-      this.addedBy = username;
-      return this;
-  }
+    public GameAddBindingModel setAddedBy(String username) {
+        this.addedBy = username;
+        return this;
+    }
 
     public String getPlaythroughTitle() {
         return playthroughTitle;

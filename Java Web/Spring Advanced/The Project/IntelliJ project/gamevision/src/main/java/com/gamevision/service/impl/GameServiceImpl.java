@@ -76,7 +76,7 @@ public class GameServiceImpl implements GameService {
         gameToAdd.setPlaythroughs(new HashSet<>());
         gameToAdd.setComments(new LinkedHashSet<>()); //Linked to keep order of addition
 
-        //TODO probably one final try/catch if something still goes wrong - e.g. description somehow too long (GameEntity's description has @Column(columnDefinition = "TEXT"))
+        //TODO probably one final try/catch if something still goes wrong - e.g. description somehow too long (GameEntity's description has @Lob
         gameRepository.save(gameToAdd); //so that GameRepository grants it an ID - PlaythroughEntity has to be created with a gameID
 
         GameEntity addedGameFromRepo = gameRepository.findByTitle(gameToAdd.getTitle()).orElseThrow(GameNotFoundException::new); //shouldn't be null

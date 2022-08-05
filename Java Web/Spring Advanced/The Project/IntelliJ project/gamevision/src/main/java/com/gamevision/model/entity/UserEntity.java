@@ -16,8 +16,9 @@ public class UserEntity extends BaseEntity {
     @Size(min = 3, max = 20, message = "Username length must be between 3 and 20 characters!")
     private String username;
 
-  //This is for the BindingModel! It gets FAT with encoding!  @Size(min = 3, max = 20, message = "Password length must be between 3 and 20 characters!")
+  //This is for the BindingModel! It gets FAT with encoding!
     @Column(nullable = false)
+    @Size(min = 3, max = 20, message = "Password length must be between 3 and 20 characters!")
     private String password;
 
     @Email

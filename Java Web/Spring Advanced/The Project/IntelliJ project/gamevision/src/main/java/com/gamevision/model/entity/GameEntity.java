@@ -18,7 +18,8 @@ public class GameEntity extends BaseEntity {
     @Column(name = "title_image_url")
     private String titleImageUrl;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false)
+    @Lob
     @Size(min = 20)
     private String description;
 
@@ -38,7 +39,7 @@ public class GameEntity extends BaseEntity {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER) //One game can have many comments
     private Set<CommentEntity> comments; //got to use GameCommentEntity, no polymorphism possible with JPA, got to have separate entities
 
-    //TODO: rating (with stars)
+    //todo: rating (with stars)
 
 
     public GameEntity() {
