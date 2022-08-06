@@ -110,7 +110,6 @@
         </dependency>
 
 
-
         <!-- for JSONObject in GamevisionRestControllerExceptionHandler -->
 
         <!-- https://mvnrepository.com/artifact/org.json/json -->
@@ -121,6 +120,12 @@
             <version>20220320</version>
         </dependency>
 
+        <!-- Integration tests-->
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 
