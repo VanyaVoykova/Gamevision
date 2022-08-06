@@ -36,6 +36,14 @@ public class GamevisionUserDetails implements UserDetails {
         return username;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
