@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/common::head"></head>
+
+<body>
+<header th:replace="fragments/common::nav"></header>
+<input type="hidden" name="gameId" id="gameId" th:object="${game}" th:value="${game.id}">
+<!-- for JS and REST - right after header -->
+<!-- todo: check if th:object here is OK  th:object="${game}"  -->
+
+<main th:object="${game}">
+
+    <!-- TODO: check position For REST controller -->
+    <!-- hero game-details-section -->
+    <section class="game-view-section section-format py-5">
+
+        <h1 th:text="*{title}">Game Title</h1>
+        <!-- maybe a carousel with screenshots here if time permits -->
+        <figure>
+            <img class="game-title-image" th:src="*{titleImageUrl}"
+                 alt="Game title image">
+        </figure>
+
+        <div class="text-container">
+        <p th:text="*{description}"> Game description. </p>
+        </div>
+
+        <div class="genres-container">
+            <p>Genre(s):</p>
+            <!--  <th:block th:each="genre : *{genres}"><span th:text="${genre}>Platformer, Puzzle</span></th:block> -->
+            <ul class="genres-list">
+                <li th:each="genre : *{genres}" th:text="${genre}"></li>
+            </ul>
+        </div>
+
+        <!--  TBIL LIKES------------------------------------------->
+     <!--   <div class="likes-counter-div" th:text="'Likes: ' + ${comment.likesCounter}">Likes: ${comment.likesCounter}</div> -->
+
+
+            <hr class="hr-separator">
+
+
+        <div class="buttons-container">
+            <!--  <a sec:authorize="isAuthenticated()" id="like*{id}" class="like-btn link-button btn btn-info w-50"></a> -->
+            <button sec:authorize="isAuthenticated()" id="like-btn" class="link-button btn btn-info w-50">Like</button>
+            <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/games/{gameId}/playthroughs/add/(gameId=*{id})}"
+               id="add-playthrough-btn"
+               class="link-button btn btn-info w-50">Add a playthrough</a> <!-- admins only -->
+            <a th:href="@{/games/{gameId}/playthroughs/all/(gameId=*{id})}" id="playthroughs-btn"
+               class="link-button btn btn-info w-50">Playthroughs</a>
+            <!--  <button id="playthroughs-btn" class="link-button btn btn-info w-50">Playthroughs</button> -->
+            <button id="comments-btn" class="link-button btn btn-info w-50">Comments</button>
+            <!-- not a href, comments-btn isjust to show/hide the comments section  <a th:href="@{/comments/{gameId}(gameId=*{id})}" id="game-comments-btn"  class="link-button btn btn-info w-50">Comments</a> -->
+
+        </div>
+
+
+    </section>
+
+
+    <!----------------------------------------------------- Playthroughs or Comments ----------------------------------------------------------------------------------->
+    <div id="playthroughs-comments-container">
+
+        <!-- TODO change the two sections' style to hidden or '' depending on which button is clicked -->
+        <!-- Short on time, don't remember much from JS SAP, never tried to integrate them in Java before, go with separate pages -->
+
+        <!-- playthroughs section TODO: optimization: show/hide Playthroughs/Comments on this page-->
+
+
+        <section id="comments-section" th:object="${game}">
+
+            <h1>Comments</h1>
+            <small id="comment-errors"></small>
+            <!-- Make comment form visible only for authenticated users -->
+            <!--  <div sec:authorize="isAuthenticated()">  doesn't change comments not getting saved -->
+
+
+            <!----------------------------------------------- COMMENTS SUBMISSION FORM---------------------------------------------------->
+
+            <form sec:authorize="isAuthenticated()" id="commentForm" method="POST" action="/">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <!-- changed to # from "/"   action actual path is sniffed by JS through the submit event -->
+                <div class="form-group">
+                    <h4>Leave a comment</h4>
+                    <label for="comment">Comment Text</label>
+
+                    <textarea name="comment"
+                              id="comment"
+                              cols="30"
+                              rows="5"
+                              class="form-control"
+                              required
+                              minlength="10"
+                              maxlength="3000"></textarea>
+                    <small id="messageError" class="invalid-feedback">
+                        Comment should be at least 10 characters.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit"
+                           class="btn"
+                           id="postComment"
+                           value="Post Comment"/>
+                </div>
+
+                <!-- EL1007E: Property or field 'token' cannot be found on null -->
+                <!-- <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> cannot find prop  -->
+            </form>
+            <!-- Comments submission -->
+            <!--  </div>  auth div -->
+
+            <!-- Trying to fix comments staying invisible for unauthenticated users - everyone should be able to see comments - was missing in antMatchers
+            sec:authorize="!isAuthenticated() || isAuthenticated()" -->
+            <div id="comments-container">
+
+            </div>
+
+        </section>
+
+
+    </div>
+
+</main>
+<!-- <script th:src="@{/scripts/game.js}"></script> switch between Playthroughs and Comments - show/hide-->
+<script th:src="@{/scripts/comments.js}"></script> <!-- for REST controller -->
+
+</body>
+
+<footer th:replace="fragments/common::footer"></footer>
+</html>
