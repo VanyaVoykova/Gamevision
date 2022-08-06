@@ -10,7 +10,6 @@ import com.gamevision.model.entity.UserEntity;
 import com.gamevision.model.enums.GenreNameEnum;
 import com.gamevision.model.servicemodels.GameAddServiceModel;
 import com.gamevision.model.servicemodels.GameEditServiceModel;
-import com.gamevision.model.user.GamevisionUserDetails;
 import com.gamevision.model.view.GameCardViewModel;
 import com.gamevision.model.view.GameViewModel;
 import com.gamevision.repository.GameRepository;
@@ -19,9 +18,10 @@ import com.gamevision.repository.UserRepository;
 import com.gamevision.service.GameService;
 import com.gamevision.service.PlaythroughService;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -44,12 +44,36 @@ public class GameServiceImpl implements GameService {
     }
 
     //Skip pagination for now
+    @Cacheable("games")
     @Override
     public Page<GameCardViewModel> getAllGames(Pageable pageable) { //Page, not list!!!
         //TODO: check if Limit description length for game cards works correctly
         //no stream, no collect to list, returning Page instead
         return gameRepository.findAll(pageable)
                 .map(this::mapGameEntityToCardView);
+    }
+
+    //Get 7 random games for the Home page
+    @Cacheable("carouselGames")
+    @Override
+    public List<GameCardViewModel> getGamesForCarousel() {
+        List<GameCardViewModel> allGamesCardViews = gameRepository.findAll().stream().map(this::mapGameEntityToCardView).collect(Collectors.toList());
+        Collections.shuffle(allGamesCardViews); //shuffle the indexes
+        return allGamesCardViews.subList(0, 7); //get the first 7 games
+    }
+
+
+    //Clear all games cache
+    @CacheEvict(cacheNames = "games", allEntries = true)
+    @Override
+    public void refreshCache() {
+
+    }
+
+    //Clear Home page carousel cache
+    @CacheEvict(cacheNames = "carouselGames", allEntries = true)
+    @Override
+    public void refreshCarouselCache() { //for the Home page carousel
     }
 
 
