@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+>
 
 <head th:replace="fragments/common::head"></head>
 
@@ -55,14 +55,14 @@
             >Description error</small>
         </div>
 
-    <!-- Genres - checkboxes -->
+        <!-- Genres - checkboxes -->
         <div th:each="g : ${allGenres}" class="form-check form-check-inline">
 
             <!-- todo: keep selected boxes:   for (chosenGenre : ${chosenGenres}) if g.getGenreName().equals(chosenGenre.getGenreName())) checkbox: checked -->
             <label class="form-check-label" th:for="checkbox" th:text="${g}">Genre(s)</label>
             <input class="form-check-input" type="checkbox" th:id="rpg-checkbox" name="genre" th:value="${g}"
                    th:checked="${chosenGenres != null and #lists.contains(chosenGenres, g)}"
-                    />
+            />
             <!-- Type conversion problem, cannot convert from null to boolean -->
             <!-- Trying to check if chosenGenres is null and if it isn't check if it contains the genre
 
@@ -72,60 +72,15 @@
 
         </div>
 
-
-
-        <!-- Add playthrough - a game is added with one playthrough todo: functionality to add several playthroughs at once -->
-        <div class="add-playthroughs-container">
-<h2>Add Playthrough</h2>
-        <div class="form-group">
-            <div class="label-holder textCol d-flex justify-content-center">
-                <label for="playthrough-title" class="h4 mb-2 text-white">Playthrough Title</label>
-            </div>
-            <input th:field="*{playthroughTitle}"
-                   th:errorclass="'is-invalid alert-danger'"
-                   type="text" class="form-control" id="playthrough-title" name="playthroughTitle"/>
-            <small th:if="${#fields.hasErrors('playthroughTitle')}" th:errors="*{playthroughTitle}"
-                   class="invalid-feedback text-danger"
-            >Playthrough title error</small>
-        </div>
-
-
-        <div class="form-group">
-            <div class="label-holder textCol d-flex justify-content-center">
-                <label for="playthrough-url" class="h4 mb-2 text-white">Playthrough URL</label>
-            </div>
-            <input th:field="*{playthroughVideoUrl}"
-                   th:errorclass="'is-invalid alert-danger'"
-                   type="text" class="form-control" id="playthrough-url" name="playthroughVideoUrl"/>
-            <small th:if="${#fields.hasErrors('playthroughVideoUrl')}" th:errors="*{playthroughVideoUrl}"
-                   class="invalid-feedback text-danger"
-            >Playthrough video url error</small>
-        </div>
-
-        <div class="form-group">
-            <div class="label-holder textCol d-flex justify-content-center">
-                <label for="playthrough-description" class="h4 mb-2 text-white">Playthrough Description</label>
-            </div>
-            <input th:field="*{playthroughDescription}"
-                   th:errorclass="'is-invalid alert-danger'"
-                   type="text" class="form-control" id="playthrough-description" name="playthroughDescription"/>
-            <small th:if="${#fields.hasErrors('playthroughDescription')}" th:errors="*{playthroughDescription}"
-                   class="invalid-feedback text-danger"
-            >Playthrough description error</small>
-        </div>
-
-        </div>
-
-<!-- Submit -->
+        <!-- Submit -->
         <div class="button-holder d-flex justify-content-center">
-            <button type="submit" class="btn btn-warning  mb-3" value="Register">Add game</button>
+            <button class="link-button btn btn-info w-50" type="submit" value="Register">Add game</button>
         </div>
 
     </form>
 
 
 </main>
-
 
 
 </body>

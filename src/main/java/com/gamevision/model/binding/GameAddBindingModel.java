@@ -1,10 +1,7 @@
 package com.gamevision.model.binding;
 
 
-import javax.persistence.Column;
-import javax.persistence.Lob;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -41,16 +38,18 @@ public class GameAddBindingModel {
 //Playthroughs are added in game view to keep add game simple and avoid dumping a lot of data all at once
 //TODO: check MM will add an empty Set<PlaythroughEntity> when mapping to GameEntity in @Service
 
-    @Size(min = 10, max = 40) //E.g. Sarcastic Dragon Age II run
-    @NotBlank //just @NotBlank, it covers @NotNull
-    private String playthroughTitle;
+    //todo modify: remove adding a playthrough when adding a game, SRP
 
-    @NotBlank
-    private String playthroughVideoUrl; //URL
+//  @Size(min = 10, max = 40) //E.g. Sarcastic Dragon Age II run
+//  @NotBlank //just @NotBlank, it covers @NotNull
+//  private String playthroughTitle;
 
-    @NotBlank
-    @Size(min = 10, max = 200) //E.g. Sarcastic Dragon Age II run
-    private String playthroughDescription;
+//  @NotBlank
+//  private String playthroughVideoUrl; //URL
+
+//  @NotBlank
+//  @Size(min = 10, max = 200) //E.g. Sarcastic Dragon Age II run
+//  private String playthroughDescription;
 
     public GameAddBindingModel() {
     }
@@ -100,30 +99,30 @@ public class GameAddBindingModel {
         return this;
     }
 
-    public String getPlaythroughTitle() {
-        return playthroughTitle;
-    }
-
-    public GameAddBindingModel setPlaythroughTitle(String playthroughTitle) {
-        this.playthroughTitle = playthroughTitle;
-        return this;
-    }
-
-    public String getPlaythroughVideoUrl() {
-        return playthroughVideoUrl;
-    }
-
-    public GameAddBindingModel setPlaythroughVideoUrl(String playthroughVideoUrl) {
-        this.playthroughVideoUrl = playthroughVideoUrl;
-        return this;
-    }
-
-    public String getPlaythroughDescription() {
-        return playthroughDescription;
-    }
-
-    public GameAddBindingModel setPlaythroughDescription(String playthroughDescription) {
-        this.playthroughDescription = playthroughDescription;
-        return this;
-    }
+    //  public String getPlaythroughTitle() {
+    //      return playthroughTitle;
+    //  }
+//
+    //  public GameAddBindingModel setPlaythroughTitle(String playthroughTitle) {
+    //      this.playthroughTitle = playthroughTitle;
+    //      return this;
+    //  }
+//
+    //  public String getPlaythroughVideoUrl() {
+    //      return playthroughVideoUrl;
+    //  }
+//
+    //  public GameAddBindingModel setPlaythroughVideoUrl(String playthroughVideoUrl) {
+    //      this.playthroughVideoUrl = playthroughVideoUrl;
+    //      return this;
+    //  }
+//
+    //  public String getPlaythroughDescription() {
+    //      return playthroughDescription;
+    //  }
+//
+    //  public GameAddBindingModel setPlaythroughDescription(String playthroughDescription) {
+    //      this.playthroughDescription = playthroughDescription;
+    //      return this;
+    //  }
 }

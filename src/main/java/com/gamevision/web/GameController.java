@@ -1,5 +1,6 @@
 package com.gamevision.web;
 
+import com.gamevision.errorhandling.exceptions.GameNotFoundException;
 import com.gamevision.model.binding.GameAddBindingModel;
 import com.gamevision.model.binding.GameEditBindingModel;
 import com.gamevision.model.enums.GenreNameEnum;
@@ -116,10 +117,10 @@ public class GameController {
             gameAddBindingModel.setGenres(genre); //List<String> from the checkboxes
             gameAddBindingModel.setAddedBy(userDetails.getUsername()); //Get the username from the Principal separately, allow it to be null upon initial binding
 
-            GameAddServiceModel gameServiceModel = modelMapper.map(gameAddBindingModel, GameAddServiceModel.class);
+            //  GameAddServiceModel gameServiceModel = modelMapper.map(gameAddBindingModel, GameAddServiceModel.class);
 
             //List<String> playthroughTitles and List<String> playthroughVideoUrls -> to PlaythroughEntity with nested for-cycle in @Service
-            gameService.addGame(gameServiceModel); //saves the game, so it can get the gameId; then calls the PlaythroughRepo to save the playthrough with the game id, then adds the  playthrough to the saved game
+
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("gameAddBindingModel", gameAddBindingModel); //binding result itself shouldn't have errors, so skipped here
             redirectAttributes.addFlashAttribute("chosenGenres", genre); //TODO: try to keep selected genres - doesn't cut it
@@ -129,15 +130,10 @@ public class GameController {
             return "redirect:/games/add";
         }
 
+        GameAddServiceModel gameAddServiceModel = gameService.addGame(gameAddBindingModel); //FIXME NULL?!? But it DOES add the game to the repo
+        Long gameId = gameAddServiceModel.getId(); //saves the game, returns its ID
+        return "redirect:/games/" + gameId; //todo sth wrong in controller/view playthrough collection is filled
 
-        //Using one binding model for both game and playthrough due to time constraint
-
-        //Game id for redirect and for tying the game to the playthrough entity
-        //can also get the entity directly controller here and pass it to the playthroughService but trying to not have entities lying around in a controller
-        //Get the newly added game
-        Long gameID = gameService.getGameIdByTitle(gameAddBindingModel.getTitle()); //ID needed for redirect, try not to use entities directly in controller
-
-        return "redirect:/games/" + gameID; //todo sth wrong in controller/view playthrough collection is filled
     }
 
 
@@ -199,7 +195,7 @@ public class GameController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("gameEditBindingModel", gameEditBindingModel); //binding result itself shouldn't have errors, so skipped here
             redirectAttributes.addFlashAttribute("chosenGenres", chosenGenres); //TODO: try to keep selected genres - doesn't cut it
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage()); //or with model???
+            model.addAttribute("errorMessage", e.getMessage()); //or with model???
             System.out.println(e.getMessage());
 
             return "redirect:/games/" + id + "/edit"; //Make sure actual id is passed here, not "redirect:/games/{id}/edit"; NOT "redirect:/games/id/edit";
@@ -209,10 +205,15 @@ public class GameController {
 
     }
 
-    @GetMapping("games/{id}/delete")
-    public String deleteGame(@PathVariable("id") Long id) {
-        gameService.deleteGameById(id);
-        return "redirect:/admin";
+    @GetMapping("/games/{id}/delete")
+    public String deleteGame(@PathVariable("id") Long id, Model model) {
+        try {
+            gameService.deleteGameById(id);
+        } catch (GameNotFoundException ex) {
+            model.addAttribute("errorMessage", ex.getMessage()); //or with model???
+        }
+
+        return "redirect:/games/all";
     }
 
 

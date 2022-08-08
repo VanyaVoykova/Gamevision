@@ -1,12 +1,10 @@
 package com.gamevision.service;
 
-import com.gamevision.errorhandling.exceptions.UserNotFoundException;
 import com.gamevision.model.entity.UserEntity;
 import com.gamevision.model.entity.UserRoleEntity;
 import com.gamevision.model.enums.UserRoleEnum;
 import com.gamevision.model.user.GamevisionUserDetails;
 import com.gamevision.repository.UserRepository;
-import com.gamevision.service.GamevisionUserDetailsService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,12 +16,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
 
 import static org.mockito.Mockito.when;
 
+//Unit test
 @ExtendWith(MockitoExtension.class)
 public class GamevisionUserDetailsServiceTest {
 

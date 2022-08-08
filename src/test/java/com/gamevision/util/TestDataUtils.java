@@ -1,16 +1,13 @@
 package com.gamevision.util;
 
-import com.gamevision.model.entity.GameEntity;
-import com.gamevision.model.entity.GenreEntity;
-import com.gamevision.model.entity.UserEntity;
-import com.gamevision.model.entity.UserRoleEntity;
+import com.gamevision.model.entity.*;
+import com.gamevision.model.enums.GenreNameEnum;
 import com.gamevision.model.enums.UserRoleEnum;
 import com.gamevision.repository.*;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 public class TestDataUtils {
@@ -54,8 +51,45 @@ public class TestDataUtils {
 
     }
 
-  // public GameEntity createTestGame(UserEntity addedBy, Set<GenreEntity> genres){
-  //     //TODO
-  // }
+
+    public UserEntity createTestUser(String username) {
+        initRoles();
+        UserEntity admin = new UserEntity()
+                .setUsername(username)
+                .setEmail("admin@test.com")
+                .setActive(true)
+                .setUserRoles(Set.of(new UserRoleEntity().setName(UserRoleEnum.USER)));
+
+        return userRepository.save(admin);
+
+    }
+
+    public GameEntity createTestGame(UserEntity addedBy, Set<GenreEntity> genres) {
+        GameEntity testGame = new GameEntity()
+                .setTitle("Test Game Title")
+                .setTitleImageUrl("Test Title Image URL")
+                .setDescription("Test game description")
+                .setGenres(Set.of(new GenreEntity().setName(GenreNameEnum.RPG),
+                        new GenreEntity().setName(GenreNameEnum.AA)))
+                .setPlaythroughs(Set.of(createTestPlaythrough(addedBy)))
+                .setComments(new HashSet<>());
+        return gameRepository.save(testGame);
+    }
+
+    public PlaythroughEntity createTestPlaythrough(UserEntity addedBy) {
+        PlaythroughEntity testPlaythrough = new PlaythroughEntity()
+                .setTitle("Test Playthrough Title")
+                .setVideoUrl("Test video URL")
+                .setDescription("Test Playthrough Description");
+
+        return playthroughRepository.save(testPlaythrough);
+    }
+
+    public void wipeDatabase() {
+        userRepository.deleteAll();
+        playthroughRepository.deleteAll(); //to avoid orphaned playthroughs without a game
+        gameRepository.deleteAll();
+    }
+
 
 }

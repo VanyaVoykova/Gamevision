@@ -1,5 +1,5 @@
-const csrfHeaderName = document.head.querySelector('[name=_csrf_header]').content
-const csrfHeaderValue = document.head.querySelector('[name=_csrf]').content
+let csrfHeaderName = document.head.querySelector('[name=_csrf_header]').content
+let csrfHeaderValue = document.head.querySelector('[name=_csrf]').content
 
 const adminActionFormContainer = document.getElementById('admin-action-form-container') //This will get hoisted and the function below will still work if this is after it
 //Hide form until an action is chosen from the admin nav
@@ -61,7 +61,7 @@ function onNavChoiceVisualizeAction(event) { //Switch <h> and button text to dis
             actionName = 'unban'
             break
         default:
-            window.alert("No action chosen.")
+            window.alert('No action chosen.')
     }
 
     adminActionFormContainer.style.display = 'block' //show the adjusted form peppered with the data above to reflect the action choice

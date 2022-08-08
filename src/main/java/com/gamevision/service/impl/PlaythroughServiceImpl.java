@@ -1,20 +1,21 @@
 package com.gamevision.service.impl;
 
 import com.gamevision.errorhandling.exceptions.GameNotFoundException;
+import com.gamevision.errorhandling.exceptions.PlaythroughNotFoundException;
 import com.gamevision.errorhandling.exceptions.UserNotFoundException;
 import com.gamevision.model.binding.PlaythroughAddBindingModel;
 import com.gamevision.model.entity.GameEntity;
 import com.gamevision.model.entity.PlaythroughEntity;
 import com.gamevision.model.entity.UserEntity;
-import com.gamevision.model.user.GamevisionUserDetails;
 import com.gamevision.model.view.CommentViewModel;
 import com.gamevision.model.view.PlaythroughViewModel;
 import com.gamevision.repository.GameRepository;
 import com.gamevision.repository.PlaythroughRepository;
 import com.gamevision.repository.UserRepository;
+import com.gamevision.service.GameService;
 import com.gamevision.service.PlaythroughService;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,12 +29,14 @@ public class PlaythroughServiceImpl implements PlaythroughService {
     private final GameRepository gameRepository;
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
+    private final GameService gameService;
 
-    public PlaythroughServiceImpl(PlaythroughRepository playthroughRepository, GameRepository gameRepository, ModelMapper modelMapper, UserRepository userRepository) {
+    public PlaythroughServiceImpl(PlaythroughRepository playthroughRepository, @Lazy GameRepository gameRepository, ModelMapper modelMapper, UserRepository userRepository, GameService gameService) {
         this.playthroughRepository = playthroughRepository;
         this.gameRepository = gameRepository;
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
+        this.gameService = gameService;
     }
 
 
@@ -55,26 +58,26 @@ public class PlaythroughServiceImpl implements PlaythroughService {
                 .setLikesCounter(0);
 
 
-        game.getPlaythroughs().add( playthroughRepository.save(playthrough));
+        game.getPlaythroughs().add(playthroughRepository.save(playthrough));
         gameRepository.save(game); //HAVE TO "UPDATE" the GameEntity like THIS!!!
     }
 
-    @Override
-    public PlaythroughEntity addPlaythroughWhenAddingGame(Long gameId, String title, String videoUrl, String description, String username) {
-        GameEntity game = gameRepository.findById(gameId).orElseThrow(GameNotFoundException::new); //OPTIMIZATION: better call the GameService...
-        UserEntity addedByUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new); //nope can be added by a different user from the one who added the game
+    // @Override
+    // public PlaythroughEntity addPlaythroughWhenAddingGame(Long gameId, String title, String videoUrl, String description, String username) {
+    //     GameEntity game = gameRepository.findById(gameId).orElseThrow(GameNotFoundException::new); //OPTIMIZATION: better call the GameService...
+    //     UserEntity addedByUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new); //nope can be added by a different user from the one who added the game
 
 
-        PlaythroughEntity playthrough = new PlaythroughEntity()
-                .setGame(game)
-                .setTitle(title)
-                .setVideoUrl(videoUrl)
-                .setDescription(description)
-                .setAddedBy(addedByUser);
+    //     PlaythroughEntity playthrough = new PlaythroughEntity()
+    //             .setGame(game)
+    //             .setTitle(title)
+    //             .setVideoUrl(videoUrl)
+    //             .setDescription(description)
+    //             .setAddedBy(addedByUser);
 
-      return  playthroughRepository.save(playthrough);
+    //     return playthroughRepository.save(playthrough);
 
-    }
+    // }
 
     //TBI: Maybe edit some day
 
@@ -99,11 +102,33 @@ public class PlaythroughServiceImpl implements PlaythroughService {
                             .map(commentEntity -> modelMapper.map(commentEntity, CommentViewModel.class)).collect(Collectors.toList()));
 //TBI: comments for playthroughs
             playthroughs.add(viewModel);
-
         }
 
         return playthroughs;
 
+    }
+
+    @Override
+    public PlaythroughEntity getPlaythroughById(Long id) {
+        return playthroughRepository.findById(id).orElseThrow(PlaythroughNotFoundException::new);
+    }
+
+    // @Override
+    // public void deletePlaythroughByGameIdAndPlaythroughId(Long gameId, Long playthroughId) {
+    //     //remove it from the GameEntity's set first! cannot delete it directly...
+    //   //  PlaythroughEntity playthroughToDelete = playthroughRepository.findById(playthroughId).orElseThrow(PlaythroughNotFoundException::new);
+    //     gameService.removePlaythroughFromPlaythroughsByGameIdAndPlaythroughId(gameId, playthroughId); //removes PT from the Game's collection and updates the game
+
+    //     playthroughRepository.deleteById(playthroughId); //delete from Playthrough repo
+    // }
+
+    @Override
+    public void deletePlaythroughById(Long id) {
+        PlaythroughEntity playthroughToDelete = playthroughRepository.findById(id).orElseThrow(PlaythroughNotFoundException::new);
+        //remove the comments; not implemented yet but PlaythroughEntity has comments as a Set
+        playthroughToDelete.getComments().clear();
+        playthroughRepository.save(playthroughToDelete); //update in repo without comments
+        playthroughRepository.deleteById(id);
     }
 
 

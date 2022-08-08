@@ -1,5 +1,6 @@
 package com.gamevision.service;
 
+import com.gamevision.model.binding.GameAddBindingModel;
 import com.gamevision.model.entity.GameEntity;
 import com.gamevision.model.servicemodels.GameAddServiceModel;
 import com.gamevision.model.servicemodels.GameEditServiceModel;
@@ -19,7 +20,7 @@ public interface GameService {
 
     void refreshCarouselCache();
 
-    GameAddServiceModel addGame(GameAddServiceModel gameAddServiceModel);
+    GameAddServiceModel addGame(GameAddBindingModel gameAddBindingModel);
 
     void editGame(Long gameId, GameEditServiceModel gameEditServiceModel);
 
@@ -36,5 +37,10 @@ public interface GameService {
     GameEntity saveGame(GameEntity gameEntity);
 
     void deleteGameById(Long id);
+
+
+    void removePlaythroughFromGameByGameIdAndPlaythroughId(Long gameId, Long playthroughId);
+
+    // void removePlaythroughFromPlaythroughsByGameIdAndPlaythroughId(Long gameId, Long playthroughId);
 
 }

@@ -1,10 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Playthroughs not found error page</title>
-</head>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head th:replace="fragments/common::head"></head>
 <body>
-No playthroughs found.
+<header th:replace="fragments/common::nav"></header>
+<main>
+
+  <!--  <div th:text="${noPlaythroughsForGameMessage}"> </div> -->
+  <h1>There are no playthroughs for this game.</h1>
+
+</main>
+
+
 </body>
 </html>

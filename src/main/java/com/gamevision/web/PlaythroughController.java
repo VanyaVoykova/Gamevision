@@ -1,7 +1,7 @@
 package com.gamevision.web;
 
 import com.gamevision.errorhandling.exceptions.GameNotFoundException;
-import com.gamevision.model.binding.GameAddBindingModel;
+import com.gamevision.errorhandling.exceptions.PlaythroughNotFoundException;
 import com.gamevision.model.binding.PlaythroughAddBindingModel;
 import com.gamevision.model.user.GamevisionUserDetails;
 import com.gamevision.model.view.PlaythroughViewModel;
@@ -12,14 +12,18 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @Controller
-@RequestMapping("/games/{gameId}/playthroughs") //todo: check url - use it in the show/hide script
+//need full URLs for the scripts
+//@RequestMapping("/games/{gameId}/playthroughs") //todo: check url - use it in the show/hide script
 public class PlaythroughController {
     private final PlaythroughRepository playthroughRepository;
     private final PlaythroughService playthroughService;
@@ -31,15 +35,16 @@ public class PlaythroughController {
         this.gameService = gameService;
     }
 
-    @GetMapping("/all")
+    @GetMapping("/games/{gameId}/playthroughs/all")
     public String getAllPlaythroughsForGame(@PathVariable("gameId") Long gameId, Model model) {
-System.out.println("No plythroughs? This is before the try-catch in /all");
+
 
         try {
             String gameTitle = gameService.getGameTitleById(gameId);
             List<PlaythroughViewModel> playthroughs = playthroughService.getAllPlaythroughsForGame(gameId);
             if (playthroughs == null) {
-                model.addAttribute("noPlaythroughsFound", "No playthroughs found.");
+                //  String noPlaythroughsForGameMessage = "There are no playthroughs for " + gameTitle + ".";
+                //  model.addAttribute("noPlaythroughsFound", noPlaythroughsForGameMessage); //nope
                 return "/errors/playthroughs-not-found-error";
             }
 
@@ -59,17 +64,17 @@ System.out.println("No plythroughs? This is before the try-catch in /all");
         }
 
         return "playthroughs-all"; //with a separate playthroughs template & page
-      // return "redirect:/games/{gameId}"; //trying to show them on the game's page with show/hide Playthroughs/Comments
+        // return "redirect:/games/{gameId}"; //trying to show them on the game's page with show/hide Playthroughs/Comments
 
     }
 
-    @GetMapping("/add")
+    @GetMapping("/games/{gameId}/playthroughs/add")
     public String addPlaythrough(@PathVariable("gameId") Long gameId, Model model) {
-       //Get the game object to visualize title, etc.
+        //Get the game object to visualize title, etc.
         try {
             String gameTitle = gameService.getGameTitleById(gameId); //throws GameNotFoundException but it shouldn't hit it unless someone tampers with the URL
             model.addAttribute("gameTitle", gameTitle);
-        } catch (GameNotFoundException ex){
+        } catch (GameNotFoundException ex) {
             model.addAttribute("exceptionMessage", ex.getMessage()); //or with model???
             return "playthrough-add";
         }
@@ -80,10 +85,10 @@ System.out.println("No plythroughs? This is before the try-catch in /all");
     }
 
 
-    @PostMapping("/add")
+    @PostMapping("/games/{gameId}/playthroughs/add")
     public String addPlaythroughSubmit(@PathVariable("gameId") Long gameId, @Valid PlaythroughAddBindingModel playthroughAddBindingModel,
-                                       BindingResult bindingResult, RedirectAttributes redirectAttributes, @AuthenticationPrincipal GamevisionUserDetails userDetails,  Model model) {
-System.out.println("POST /add: ");
+                                       BindingResult bindingResult, RedirectAttributes redirectAttributes, @AuthenticationPrincipal GamevisionUserDetails userDetails, Model model) {
+        System.out.println("POST /add: ");
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("playthroughAddBindingModel", playthroughAddBindingModel);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.playthroughAddBindingModel", bindingResult);
@@ -98,23 +103,38 @@ System.out.println("POST /add: ");
             playthroughService.addPlaythrough(gameId, playthroughAddBindingModel, userDetails.getUsername());
         } catch (Exception e) {
             model.addAttribute("gameNotFound", "Game not found.");
- return "/errors/game-not-found-error"; //checking only for existing game here, so it should be this error  todo check
-          //  return "redirect:/games/" + gameId + "/playthroughs/add";
+            return "/errors/game-not-found-error"; //checking only for existing game here, so it should be this error  todo check
+            //  return "redirect:/games/" + gameId + "/playthroughs/add";
             //model.addAttribute("exceptionMessage", e.getMessage()); //or with model???
         }
 
 //Game found, game title added to model, forge ahead
 
 
-
-        return "redirect:/games/" + gameId; ///no {}, the actual id
+        return "redirect:/games/" + gameId + "/playthroughs/all"; ///no {}, the actual id
 
     }
 
-   @ModelAttribute("playthroughAddBindingModel")
-   public PlaythroughAddBindingModel playthroughAddBindingModel() {
-       return new PlaythroughAddBindingModel();
-   }
+    //No edit playthrough for now
+///games/{gameId}/playthroughs // /games/{gameId}/playthroughs/{playthroughId}/delete")
+    @GetMapping("/games/{gameId}/playthroughs/{playthroughId}/delete")
+    //ugh missing a leading /   //@PathVariable("gameId") Long gameId,
+    public String deletePlaythrough(@PathVariable("gameId") Long gameId, @PathVariable("playthroughId") Long playthroughId, Model model) {
+
+        try {
+            gameService.removePlaythroughFromGameByGameIdAndPlaythroughId(gameId, playthroughId); //remove the playthrough from the game's playthroughs and updates the game in the repo first
+            playthroughService.deletePlaythroughById(playthroughId);
+
+        } catch (PlaythroughNotFoundException ex) {
+            model.addAttribute("errorMessage", ex.getMessage()); //or with model???
+        }
+        return "redirect:/games/" + gameId + "/playthroughs/all"; //won't allow JS to do window.location.replace to a page with <iframe>
+    }
+
+    @ModelAttribute("playthroughAddBindingModel")
+    public PlaythroughAddBindingModel playthroughAddBindingModel() {
+        return new PlaythroughAddBindingModel();
+    }
 
 
 }

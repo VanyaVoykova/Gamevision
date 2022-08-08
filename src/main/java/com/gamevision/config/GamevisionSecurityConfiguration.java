@@ -1,21 +1,18 @@
 package com.gamevision.config;
 
 import com.gamevision.model.enums.UserRoleEnum;
+import com.gamevision.repository.UserRepository;
 import com.gamevision.service.GamevisionUserDetailsService;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.web.SecurityFilterChain;
-
-
-import com.gamevision.repository.UserRepository;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
-
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
@@ -42,8 +39,10 @@ public class GamevisionSecurityConfiguration {
 
     @Bean //defines which pages should require authentication / specific role - type http. to see them all
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
+        //    http.csrf().ignoringAntMatchers("https://www.youtube.com"); //to allow playthrough videos
         // define which requests are allowed and which not
+
+        //  http.headers().frameOptions().sameOrigin().defaultsDisabled(); //for deleting playthroughs, SS doesn't like the <iframe> with the video
 
         //antMatchers ORDER MATTERS
         http.authorizeRequests()
@@ -65,12 +64,7 @@ public class GamevisionSecurityConfiguration {
                 .antMatchers(HttpMethod.POST, "/**").authenticated() //only authenticated can POST; admin-specific and additional authorizations below
                 // removed api/games/{gameId}
 
-
-
-
-
                 // .antMatchers("/pages/moderators").hasRole(UserRoleEnum.MODERATOR.name()) ///games/{gameId}/playthroughs/add/(gameId=*{id})}" //uncomment for MODERATOR
-
 
 //TODO: add for admins - users/{userId} - user management
 
@@ -120,6 +114,9 @@ public class GamevisionSecurityConfiguration {
                 // on logout go to the home page; It shouldn't be able to fail, right?
                 .logoutSuccessUrl("/"); //redirect only after the above
         //add ; and remove the rest if you want to use cors
+
+
+        //todo add cors for Youtube - needed for playthrough videos
 
         //TODO: COMMENT OUT these two, add ; above
         //cannot find csrf tokens if disabled, of course

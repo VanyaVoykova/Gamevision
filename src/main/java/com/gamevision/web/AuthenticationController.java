@@ -2,7 +2,6 @@ package com.gamevision.web;
 
 import com.gamevision.model.binding.UserRegisterBindingModel;
 import com.gamevision.service.UserService;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,7 +30,7 @@ public class AuthenticationController { //REGISTER AND LOGIN
 
 
     @PostMapping("/users/register")
-    public String registerSubmit(@Valid UserRegisterBindingModel userRegisterBindingModel, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String registerSubmit(@Valid UserRegisterBindingModel userRegisterBindingModel, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
         //in constr (@UserRegisterBindingModel bm, BindingResult bindingResult, RedirectAttributes redirectAttributes
         boolean isUserNameFree = userService.isUserNameFree(userRegisterBindingModel.getUsername());
         boolean isEmailFree = userService.isEmailFree(userRegisterBindingModel.getEmail());
@@ -57,7 +56,14 @@ public class AuthenticationController { //REGISTER AND LOGIN
 
         //Uses UserService, Authentication is separate only in controllers to avoid UserController getting too fat
         // userService.registerUser(modelMapper.map(userRegisterBindingModel, UserServiceModel.class));
-        userService.registerAndLogin(userRegisterBindingModel);
+        try {
+            userService.registerAndLogin(userRegisterBindingModel);
+        } catch (RuntimeException e) {
+            model.addAttribute("exceptionMessage", e.getMessage()); //or with model???
+            model.addAttribute("exceptionCause", e.getCause());
+            return "error"; //should be returned automatically
+        }
+
 
         return "redirect:/";
     }

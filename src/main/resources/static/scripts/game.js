@@ -1,10 +1,10 @@
 //const container = document.getElementById('playthroughs-comments-container');
 
-const csrfHeaderName = document.head.querySelector('[name=_csrf_header]').content
-const csrfHeaderValue = document.head.querySelector('[name=_csrf]').content
+let csrfHeaderName = document.head.querySelector('[name=_csrf_header]').content
+let csrfHeaderValue = document.head.querySelector('[name=_csrf]').content
 
 document.getElementById('playthroughs-btn').addEventListener('click', showPlaythroughs);
-document.getElementById('comments-btn').addEventListener ('click', showComments);
+document.getElementById('comments-btn').addEventListener('click', showComments);
 
 const playthroughsSection = document.getElementById('playthroughs-section');
 const commentsSection = document.getElementById('comments-section');

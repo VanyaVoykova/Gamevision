@@ -10,59 +10,69 @@
 
 <main>
 
-        <!-- TODO change the two sections' style to hidden or '' depending on which button is clicked -->
-        <!-- Short on time, don't remember much from JS SAP, never tried to integrate them in Java before, go with separate pages -->
+    <!-- TODO change the two sections' style to hidden or '' depending on which button is clicked -->
+    <!-- Short on time, don't remember much from JS SAP, never tried to integrate them in Java before, go with separate pages -->
 
-        <!-- playthroughs section -->
-        <section id="playthroughs-section" >
-            <p class="playthrough-list-caption" th:text="${gameTitle}">Game Title</p>
-            <p class="playthrough-list-caption">Available playthroughs:</p>
+    <!-- playthroughs section -->
+    <section id="playthroughs-section">
+        <p class="playthrough-list-caption" th:text="${gameTitle}">Game Title</p>
+        <p class="playthrough-list-caption">Available playthroughs:</p>
 
-            <div class="row playthrough-cards-container"  th:each="playthrough : ${playthroughs}" th:object="${playthrough}">
+        <div class="row playthrough-cards-container" th:each="playthrough : ${playthroughs}" th:object="${playthrough}">
 
-                <div class="playthrough-card">
-                    <!-- video title from service/repo goes here -->
-                    <div class="video-container container-fluid col-10">
-                        <iframe width="560" height="315" th:src="*{videoUrl}"
-                                title="YouTube video player"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen></iframe>
+            <div class="playthrough-card">
+                <!---------------------------------------------VIDEO --------------------------------------------------->
+
+                <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen height="615"
+                        th:src="*{videoUrl}"
+                        title="YouTube video player"
+                        width="860"></iframe>
+                <!-----------------------------------------Playthrough Info and buttons ------------------------------------->
+                <div class="playthrough-info-container">
+                    <!-- replace text content with Thymeleaf-->
+                    <div class="playthrough-description">
+                        <h3 class="playthrough-title" th:text="*{title}">Ori and the Blind Forest: Definitive
+                            Edition</h3>
+                        <hr>
+                        <p th:text="*{description}">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at
+                            magna nisl. In hendrerit eros tortor, ut porta augue finibus vitae. Aliquam ut viverra
+                            neque. In malesuada dui a risus venenatis efficitur. Praesent sollicitudin eleifend purus,
+                            accumsan ultrices tellus. Nullam ac interdum justo. Vestibulum accumsan, ligula nec finibus
+                            scelerisque, massa nisl bibendum turpis, id maximus urna felis non enim. Maecenas convallis
+                            commodo finibus. Nam ultricies dolor in augue vulputate, et venenatis justo viverra. </p>
                     </div>
 
-                    <div class="playthrough-info-container">
-                        <!-- replace text content with Thymeleaf-->
-                        <div class="playthrough-description">
-                            <h3 class="playthrough-title" th:text="*{title}">Ori and the Blind Forest: Definitive Edition</h3>
-                            <hr>
-                            <p th:text="*{description}">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at magna nisl. In hendrerit eros tortor, ut porta augue finibus vitae. Aliquam ut viverra neque. In malesuada dui a risus venenatis efficitur. Praesent sollicitudin eleifend purus, accumsan ultrices tellus. Nullam ac interdum justo. Vestibulum accumsan, ligula nec finibus scelerisque, massa nisl bibendum turpis, id maximus urna felis non enim. Maecenas convallis commodo finibus. Nam ultricies dolor in augue vulputate, et venenatis justo viverra. </p>
-                        </div>
+                    <div class="playthrough-feedback-container">
+                        <!-- Getting complicated to delete whith an <iframe> element on the URL, so changing the URL up a bit -->
+                        <p class="hidden-info" hidden sec:authorize="hasRole('ROLE_ADMIN')" th:id="${gameId}"></p>
+                        <!-- X-Frame-Options "SAMEORIGIN" screws it  th:id="${playthrough.id}" -->
+                        <a class="delete-btn delete-playthrough-btn link-button btn btn-info w-50"
+                           sec:authorize="hasRole('ROLE_ADMIN')"
+                           th:href="@{/games/{gameId}/playthroughs/{playthroughId}/delete/(gameId=${gameId}, playthroughId=*{id})}"
+                           th:id="*{id}">Delete</a>
 
-                        <div class="playthrough-feedback-container">
+                        <button class="link-button btn btn-info w-50">Like</button>
+                        <div class="likes-counter-div" th:text="*{likesCounter}">Likes: 77777</div>
+                        <!--todo:  <a th:href="@{/games/view-game/{gameId}(gameId=*{id})/comments}" class="link-button btn btn-info w-50">View Comments</a> -->
 
-                            <button  class="link-button btn btn-info w-50">Like</button>
-                            <div class="likes-counter-div" th:text="*{likesCounter}">Likes: 77777</div>
-                           <!--todo:  <a th:href="@{/games/view-game/{gameId}(gameId=*{id})/comments}" class="link-button btn btn-info w-50">View Comments</a> -->
-
-                            <!-- link to playthrough comment section - read and add comments -->
-                           <!-- <button class="link-button btn btn-info w-50">Comments</button> -->
-
-                        </div>
+                        <!-- link to playthrough comment section - read and add comments -->
+                        <!-- <button class="link-button btn btn-info w-50">Comments</button> -->
 
                     </div>
+
                 </div>
-
             </div>
 
-        </section>
+        </div>
 
-
-
-
+    </section>
 
 
 </main>
-<!-- <script th:src="@{/scripts/game.js}"></script> -->
-<script th:src="@{/scripts/game.js}"></script>
+
+<!-- <script th:src="@{/scripts/game.js}"></script> --> <!-- for switching between playthroughs and comments  -->
+<script th:src="@{/scripts/delete-confirm.js}"></script> <!-- for delete button functionality -->
 
 </body>
 

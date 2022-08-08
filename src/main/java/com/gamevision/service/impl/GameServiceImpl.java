@@ -3,6 +3,7 @@ package com.gamevision.service.impl;
 import com.gamevision.errorhandling.exceptions.GameNotFoundException;
 import com.gamevision.errorhandling.exceptions.GameTitleExistsException;
 import com.gamevision.errorhandling.exceptions.UserNotFoundException;
+import com.gamevision.model.binding.GameAddBindingModel;
 import com.gamevision.model.entity.GameEntity;
 import com.gamevision.model.entity.GenreEntity;
 import com.gamevision.model.entity.PlaythroughEntity;
@@ -18,8 +19,7 @@ import com.gamevision.repository.UserRepository;
 import com.gamevision.service.GameService;
 import com.gamevision.service.PlaythroughService;
 import org.modelmapper.ModelMapper;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,7 @@ public class GameServiceImpl implements GameService {
     private final PlaythroughService playthroughService;
     private final ModelMapper modelMapper;
 
-    public GameServiceImpl(GameRepository gameRepository, UserRepository userRepository, GenreRepository genreRepository, ModelMapper modelMapper, PlaythroughService playthroughService) {
+    public GameServiceImpl(GameRepository gameRepository, UserRepository userRepository, GenreRepository genreRepository, @Lazy PlaythroughService playthroughService, ModelMapper modelMapper) {
         this.gameRepository = gameRepository;
         this.userRepository = userRepository;
         this.genreRepository = genreRepository;
@@ -44,7 +44,7 @@ public class GameServiceImpl implements GameService {
     }
 
     //Skip pagination for now
-    @Cacheable("games")
+    //@Cacheable("games") //disabled in order to show add game functionality, or added game won't be displayed right away
     @Override
     public Page<GameCardViewModel> getAllGames(Pageable pageable) { //Page, not list!!!
         //TODO: check if Limit description length for game cards works correctly
@@ -54,7 +54,7 @@ public class GameServiceImpl implements GameService {
     }
 
     //Get 7 random games for the Home page
-    @Cacheable("carouselGames")
+    // @Cacheable("carouselGames")
     @Override
     public List<GameCardViewModel> getGamesForCarousel() {
         List<GameCardViewModel> allGamesCardViews = gameRepository.findAll().stream().map(this::mapGameEntityToCardView).collect(Collectors.toList());
@@ -62,38 +62,39 @@ public class GameServiceImpl implements GameService {
         return allGamesCardViews.subList(0, 7); //get the first 7 games
     }
 
-
+    //todo uncomment to activate caching
     //Clear all games cache
-    @CacheEvict(cacheNames = "games", allEntries = true)
+    // @CacheEvict(cacheNames = "games", allEntries = true)
     @Override
     public void refreshCache() {
 
     }
 
-    //Clear Home page carousel cache
-    @CacheEvict(cacheNames = "carouselGames", allEntries = true)
+    //todo uncomment to activate caching
+//Clear Home page carousel cache
+    //@CacheEvict(cacheNames = "carouselGames", allEntries = true)
     @Override
     public void refreshCarouselCache() { //for the Home page carousel
     }
 
 
     @Override
-    public GameAddServiceModel addGame(GameAddServiceModel gameAddServiceModel) {
+    public GameAddServiceModel addGame(GameAddBindingModel gameAddbindingModel) {
         //Check if title doesn't already exist - must be unique!
-        GameEntity existingGameWithTitle = gameRepository.findByTitle(gameAddServiceModel.getTitle()).orElse(null);
+        GameEntity existingGameWithTitle = gameRepository.findByTitle(gameAddbindingModel.getTitle()).orElse(null);
         if (existingGameWithTitle != null) { //game with that name EXISTS
             throw new GameTitleExistsException(); //"A game with that title already exists."
         }
 
-        UserEntity addedByUser = userRepository.findByUsername(gameAddServiceModel.getAddedBy()).orElseThrow(UserNotFoundException::new);
+        UserEntity addedByUser = userRepository.findByUsername(gameAddbindingModel.getAddedBy()).orElseThrow(UserNotFoundException::new);
 
-        GameEntity gameToAdd = modelMapper.map(gameAddServiceModel, GameEntity.class);
+        GameEntity gameToAdd = modelMapper.map(gameAddbindingModel, GameEntity.class); //maps it alright
 
         gameToAdd.setAddedBy(addedByUser);
 
         //List<String> in SM -> Set<GenreEntity> in GameEntity; list in SM never empty
         Set<GenreEntity> genres = new LinkedHashSet<>(); //LHS to keep them ordered as they appear in the enum for consistency - easy to compare games visually
-        for (String genreName : gameAddServiceModel.getGenres()) {
+        for (String genreName : gameAddbindingModel.getGenres()) {
             GenreEntity genreEntity = genreRepository.findByName(GenreNameEnum.valueOf(genreName)); //entity's name is GenreNameEnum - RPG(Role-playing), ....
             genres.add(genreEntity);
         }
@@ -104,18 +105,26 @@ public class GameServiceImpl implements GameService {
         gameToAdd.setComments(new LinkedHashSet<>()); //Linked to keep order of addition
 
         //TODO probably one final try/catch if something still goes wrong - e.g. description somehow too long (GameEntity's description has @Lob
-        gameRepository.save(gameToAdd); //so that GameRepository grants it an ID - PlaythroughEntity has to be created with a gameID
+        GameEntity addedGameFromRepo = gameRepository.save(gameToAdd); //shouldn't throw unless DB  is down... then error.html should show itself
 
-        GameEntity addedGameFromRepo = gameRepository.findByTitle(gameToAdd.getTitle()).orElseThrow(GameNotFoundException::new); //shouldn't be null
 
-        //playthrough data should be validated by the GameAddBindingModel, it holds both game and playthrough data...
+        //todo cancel adding a playthrough when adding a game
+        //
+        //  //playthrough data should be validated by the GameAddBindingModel, it holds both game and playthrough data...
 
-        //Adds playthrough to PlaythroughRepository, then gets the newly added game from the repo and adds the playthrough to it; throws exception when game not found
-        PlaythroughEntity savedPlaythrough = playthroughService.addPlaythroughWhenAddingGame(addedGameFromRepo.getId(), gameAddServiceModel.getPlaythroughTitle(), gameAddServiceModel.getPlaythroughVideoUrl(), gameAddServiceModel.getPlaythroughDescription(), gameAddServiceModel.getAddedBy()); //add UserDetails in service
-        addedGameFromRepo.getPlaythroughs().add(savedPlaythrough);
+        //  //Adds playthrough to PlaythroughRepository, then gets the newly added game from the repo and adds the playthrough to it; throws exception when game not found
+        //  PlaythroughEntity savedPlaythrough = playthroughService.addPlaythroughWhenAddingGame(addedGameFromRepo.getId(), gameAddServiceModel.getPlaythroughTitle(), gameAddServiceModel.getPlaythroughVideoUrl(), gameAddServiceModel.getPlaythroughDescription(), gameAddServiceModel.getAddedBy()); //add UserDetails in service
+        //  addedGameFromRepo.getPlaythroughs().add(savedPlaythrough);
+        //return gameServiceModel
 
-        return gameAddServiceModel; //trying not to expose the entity elsewhere (in this case the @Aspect for logging)
-
+        //Long id, String title, String addedBy   addedGameFromRepo.getId() is NULL?!?!?!!?
+        //return new GameAddServiceModel(addedGameFromRepo.getId(), addedGameFromRepo.getTitle(), addedGameFromRepo.getAddedBy().getUsername()); //return the id so the controller can compose the link to the newly added game
+        GameAddServiceModel sm = new GameAddServiceModel()
+                .setId(addedGameFromRepo.getId())
+                .setTitle(addedGameFromRepo.getTitle())
+                .setAddedBy(addedGameFromRepo.getAddedBy().getUsername());
+        //what is happening above, why does it return null
+        return sm; //it's not null here, holds the id and all but the controller still blows up?!?
     }
 
     @Override //Doesn't include playthroughs
@@ -196,9 +205,34 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public void deleteGameById(Long id) {
+
+        GameEntity entityToDelete = gameRepository.findById(id).orElseThrow(GameNotFoundException::new);
+        entityToDelete.getPlaythroughs().clear(); //delete all playthroughs to ensure none are left orphaned
+        gameRepository.save(entityToDelete); //update
         gameRepository.deleteById(id);
     }
 
+    @Override
+    public void removePlaythroughFromGameByGameIdAndPlaythroughId(Long gameId, Long playthroughId) {
+        GameEntity gameToLoseAPlaythrough = gameRepository.findById(gameId).orElseThrow(GameNotFoundException::new);
+        PlaythroughEntity playthroughToRemove = gameToLoseAPlaythrough.getPlaythroughs().stream().filter(playthrough -> playthrough.getId().equals(playthroughId)).findFirst().get();
+        gameToLoseAPlaythrough.getPlaythroughs().remove(playthroughToRemove); //removed from the GameEntity's Set<PlaythroughEntity>
+        gameRepository.save(gameToLoseAPlaythrough); //update game
+    }
+
+
+//Results in cyclic dependency
+    // @Override
+    // public void removePlaythroughFromPlaythroughsByGameIdAndPlaythroughId(Long gameId, Long playthroughId) {
+    //     GameEntity gameToLoseAPlaythrough = gameRepository.findById(gameId).orElseThrow(GameNotFoundException::new);
+    //     PlaythroughEntity playthroughToRemove = gameToLoseAPlaythrough.getPlaythroughs().stream().filter(playthrough -> playthrough.getId().equals(playthroughId)).findFirst().get();
+    //     gameToLoseAPlaythrough.getPlaythroughs().remove(playthroughToRemove); //removed from the GameEntity's Set<PlaythroughEntity>
+//
+    //     //update the GameEntity in the repo
+    //     gameRepository.save(gameToLoseAPlaythrough);
+//
+    // }
+//
 
     private GameCardViewModel mapGameEntityToCardView(GameEntity gameEntity) {
         GameCardViewModel gameCardView = modelMapper.map(gameEntity, GameCardViewModel.class);

@@ -2,9 +2,7 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-
 <head th:replace="fragments/common::head"></head>
-
 <body> <!--  class="bg-dark" -->
 <header th:replace="fragments/common::nav"></header>
 <main>
@@ -37,17 +35,26 @@
                                 <li th:each="genre : *{genres}" th:text="${genre}"></li>
                             </ul>
                         </div>
+                        <hr class="hr-separator">
+                        <div class="buttons-container">
+                            <a class="link-button btn btn-info w-50" th:href="@{/games/{gameId}(gameId=*{id})}">View
+                                game</a>
 
-                        <a th:href="@{/games/{gameId}(gameId=*{id})}"  class="link-button btn btn-info w-50">View game</a>
 
-                        <!-- Admins only -->
-                        <a th:href="@{/games/{gameId}/edit(gameId=*{id})}"  class="link-button btn btn-info w-50">Edit game</a>
-                        <a th:href="@{/games/{gameId}/delete(gameId=*{id})}"  class="link-button btn btn-info w-50">Delete game</a>
-                        <hr>
+                            <!----------------------------------------------- Admins only ------------------------------------------------>
+                            <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                                <a class="link-button btn btn-info w-50"
+                                   th:href="@{/games/{gameId}/edit(gameId=*{id})}">Edit game</a>
+
+                                <!-- Done with JS, old link th:href="@{/games/{gameId}/delete(gameId=*{id})}" -->
+                                <a class="delete-btn delete-game-btn link-button btn btn-info w-50" href="/"
+                                   th:id="*{id}">Delete game</a>
+                            </th:block>
+
+                        </div>
                     </div>
                 </div>
             </div>
-
 
             <!-- PAGINATION TODO: check, it's breaks-->
             <!-- First is always enabled when we're NOT on the first page, same principle for Last -->
@@ -97,9 +104,7 @@
                     </li>
                 </ul>
             </nav>
-
 </div>
-
         -->
             <!-- dummy card
                             <div class="card border-light mb-3">
@@ -119,20 +124,14 @@
                         </div>
             -->
 
-
         </div>
-
     </div>
-
     <!-- </section> -->
-
 
 </main>
 
-<!-- TODO: check if needed -->
-<div class="spacer"></div>
+<script th:src="@{/scripts/delete-confirm.js}"></script> <!-- for delete button functionality -->
 
 </body>
-
 <footer th:replace="fragments/common::footer"></footer>
 </html>
