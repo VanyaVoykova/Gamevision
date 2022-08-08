@@ -35,6 +35,7 @@ public class GameServiceImpl implements GameService {
     private final PlaythroughService playthroughService;
     private final ModelMapper modelMapper;
 
+    //@Lazy PlaythroughService to avoid cycling dependency problem (encountered while trying to delete a PlaythroughEntity)
     public GameServiceImpl(GameRepository gameRepository, UserRepository userRepository, GenreRepository genreRepository, @Lazy PlaythroughService playthroughService, ModelMapper modelMapper) {
         this.gameRepository = gameRepository;
         this.userRepository = userRepository;

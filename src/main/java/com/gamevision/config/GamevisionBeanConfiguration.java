@@ -17,17 +17,4 @@ public class GamevisionBeanConfiguration {
         return new ModelAndView();
     }
 
-    //still cannot delete playthrough with this
-    // @Bean
-    // public WebMvcConfigurer corsConfigurer() {
-    //     return new WebMvcConfigurer() {
-    //         @Override
-    //         public void addCorsMappings(CorsRegistry registry) {
-    //             registry.addMapping("/games/{gameId}/playthroughs/{playthroughId}/delete").allowedOrigins("http://localhost:9000");
-    //         }
-    //     };
-//
-    //     //games/{gameId}/playthroughs/{playthroughId}/delete
-    // }
-
 }
