@@ -91,6 +91,9 @@ public class GameServiceImpl implements GameService {
 
         GameEntity gameToAdd = modelMapper.map(gameAddbindingModel, GameEntity.class); //maps it alright
 
+        //todo test new lines
+        //   gameToAdd.setDescription(String.format(gameAddbindingModel.getDescription()).replaceAll(""));
+
         gameToAdd.setAddedBy(addedByUser);
 
         //List<String> in SM -> Set<GenreEntity> in GameEntity; list in SM never empty
@@ -120,12 +123,11 @@ public class GameServiceImpl implements GameService {
 
         //Long id, String title, String addedBy   addedGameFromRepo.getId() is NULL?!?!?!!?
         //return new GameAddServiceModel(addedGameFromRepo.getId(), addedGameFromRepo.getTitle(), addedGameFromRepo.getAddedBy().getUsername()); //return the id so the controller can compose the link to the newly added game
-        GameAddServiceModel sm = new GameAddServiceModel()
+        //what is happening above, why does it return null
+        return new GameAddServiceModel()
                 .setId(addedGameFromRepo.getId())
                 .setTitle(addedGameFromRepo.getTitle())
-                .setAddedBy(addedGameFromRepo.getAddedBy().getUsername());
-        //what is happening above, why does it return null
-        return sm; //it's not null here, holds the id and all but the controller still blows up?!?
+                .setAddedBy(addedGameFromRepo.getAddedBy().getUsername()); //it's not null here, holds the id and all but the controller still blows up?!?
     }
 
     @Override //Doesn't include playthroughs

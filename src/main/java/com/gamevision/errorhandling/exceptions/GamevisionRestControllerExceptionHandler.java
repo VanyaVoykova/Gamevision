@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 
-//TODO: this one seems fishy; but still same 404 without it
-@Order(1)
+
+@Order(2)
 @ControllerAdvice(annotations = RestController.class) //for regular Controllers
 public class GamevisionRestControllerExceptionHandler {
 

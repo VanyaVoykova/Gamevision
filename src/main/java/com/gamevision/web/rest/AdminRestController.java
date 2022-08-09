@@ -1,11 +1,9 @@
 package com.gamevision.web.rest;
 
-import com.gamevision.errorhandling.errors.ErrorApiResponse;
 import com.gamevision.errorhandling.exceptions.UserNotFoundException;
+import com.gamevision.errors.ErrorApiResponse;
 import com.gamevision.model.binding.UserManageBindingModel;
-import com.gamevision.model.servicemodels.UserServiceModel;
 import com.gamevision.model.view.UserAdministrationViewModel;
-import com.gamevision.model.view.UserViewModel;
 import com.gamevision.service.AdminService;
 import com.gamevision.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -14,8 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
+import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 //@RequestMapping("/admin")
@@ -29,7 +26,12 @@ public class AdminRestController {
     }
 
     //  @GetMapping("/admin") //is loaded by a regular @AdminController
-
+    @RequestMapping("/admin")
+    public ModelAndView adminPanel() {
+        ModelAndView modelAndView = new ModelAndView("admin-panel");
+        modelAndView.setViewName("admin-panel.html");
+        return modelAndView;
+    }
 
     //These return UserAdministrationViewModel that has extra data compared from the regular UserViewModel.
     //This was meant to provide admins a way to check the user's role and active status from the app itself.
@@ -79,14 +81,13 @@ public class AdminRestController {
 
     @PutMapping("/admin/unban")
     public ResponseEntity<UserAdministrationViewModel> unbanUser(@AuthenticationPrincipal UserDetails userDetails,
-                                                               @Validated @RequestBody UserManageBindingModel userManageBindingModel) {
+                                                                 @Validated @RequestBody UserManageBindingModel userManageBindingModel) {
 
         //ExceptionHandler should handle any exceptions here
         UserAdministrationViewModel userAdminVM = adminService.unbanUser(userManageBindingModel.getUsername());
 
         return ResponseEntity.status(200).body(userAdminVM);
     }
-
 
 
     @ExceptionHandler({UserNotFoundException.class}) //overrides the response with our custom ErrorApiResponse

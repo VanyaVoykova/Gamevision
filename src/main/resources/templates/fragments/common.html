@@ -71,7 +71,7 @@
             <li class="nav-item"><a class="nav-link" href="/games/all">Games</a></li>
 
             <!-- guest users can read comments but cannot like or post comments, cannot create a topic -->
-            <li class="nav-item"><a class="nav-link" href="/users/forum">Forum</a></li>
+            <!-- <li class="nav-item"><a class="nav-link" href="/users/forum">Forum</a></li> -->
         </ul>
 
         <!---------------------------------- visible only for UNAUTHENTICATED  --------------------------------------->
@@ -93,7 +93,8 @@
                     <!-- not button, will screw Bootstrap style  <button type="submit" class="nav-link">Logout</button> -->
                     <!-- check token -->
                     <!--  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"> -->
-                    <input id="logout-btn" class="btn btn-link  nav-link input-btn" type="submit" value="Logout">
+                    <div class="logout-btn-container"><input class="btn btn-link  nav-link input-btn" id="logout-btn"
+                                                             type="submit" value="Logout"></div>
                 </form>
             </li>
             <!--  btn btn-link nav-link input-btn  <a class="nav-link" href="/users/logout">Logout</a></li> -->

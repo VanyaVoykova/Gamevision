@@ -126,7 +126,7 @@ public class PlaythroughController {
             playthroughService.deletePlaythroughById(playthroughId);
 
         } catch (PlaythroughNotFoundException ex) {
-            model.addAttribute("errorMessage", ex.getMessage()); //or with model???
+            model.addAttribute("errorMessage", ex.getMessage());
         }
         return "redirect:/games/" + gameId + "/playthroughs/all"; //won't allow JS to do window.location.replace to a page with <iframe>
     }

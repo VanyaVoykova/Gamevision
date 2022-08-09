@@ -1,24 +1,31 @@
 body {
     background-color: #03080E;
+    background-blend-mode: luminosity;
 }
+
 #main-navbar {
     background-color: #131A21;
 }
+
 #left-navbar {
     float: left;
 }
+
 #right-navbar {
     float: right;
 }
+
 #center-navbar {
     display: flex;
     justify-content: center;
     margin-left: 20%;
     margin-right: 20%;
 }
+
 #admin-navbar {
     margin-left: 33%;
 }
+
 .side-nav li a, .navbar ul li a, #logout-btn {
     font-size: 1vw;
     font-family: 'Electrolize', serif;
@@ -41,16 +48,28 @@ body {
     font-size: 1.2em;
     background-color: #131a21;
 }
-#logout-btn {
-    margin-top: 0.7vh;
+
+
+.logout-btn-container {
+    display: inline-block;
+    margin-top: 9%;
 }
+
+#login-btn {
+    display: block;
+    margin-top: 20%;
+    margin-left: 20%;
+
+}
+
 /** display: inline   -> height: has no effect */
 /** also keeps footer in place */
 main {
-    display: block;
+    position: relative;
     margin: auto;
     width: 90%;
 }
+
 /** margin: 2rem auto 4rem;
   width: 90%;
   max-width: 70rem;
@@ -62,14 +81,17 @@ main {
     margin-bottom: 20vh;
     height: 47vh;
 }
+
 .carousel-inner {
     background-color: black !important;
     margin-top: 10vh;
 }
+
 .carousel-inner > div > img {
     display: inline-block;
     float: left;
 }
+
 .carousel-caption {
     padding-left: 10px;
     margin-left: 150px;
@@ -77,6 +99,7 @@ main {
     float: right;
     width: 100%;
 }
+
 h1 {
     font-size: 2rem;
     font-weight: bold;
@@ -84,6 +107,7 @@ h1 {
     margin: 3%;
     text-align: center;
 }
+
 h3 {
     font-size: 1rem;
     font-weight: bold;
@@ -91,6 +115,7 @@ h3 {
     margin: 5px;
     text-align: left;
 }
+
 /** .carousel-caption p {
     font-size: 12px;
 } */
@@ -104,11 +129,13 @@ img {
     max-width: 100%;
     object-position: bottom right; /** anchor when resizing */
 }
+
 /**  position: relatve; */
 figure {
     margin: 2rem 0;
     display: inline-block;
 }
+
 figure img {
     display: block;
 }
@@ -116,6 +143,7 @@ figure img {
 .card {
     margin: 10px;
 }
+
 .story-button {
     background-color: #03080E;
 }
@@ -125,6 +153,7 @@ figure img {
     padding: 21%;
     flex: 1;
 }
+
 /** .spacer-home {
     padding: 10%;
     flex: 1;
@@ -146,11 +175,13 @@ figure img {
     height: 80vh;
     max-height: 40rem;
 }
+
 .game-details-section {
     margin: auto;
     width: 60%;
     height: 60%;
 }
+
 .card-title {
     font-size: 20px;
     font-weight: bold;
@@ -159,12 +190,15 @@ figure img {
     margin-top: 5px;
     margin-bottom: 7px;
 }
+
 .card-text {
     font-size: 17px;
 }
+
 .card-body {
     background-color: #131A21;
 }
+
 .bottom-card-text {
     margin: 5px;
     color: #6C8BF4;
@@ -204,12 +238,14 @@ figure img {
     display: inline;
     float: left;
 }
+
 /** list bullet   styling to force bullets   class="game-view-genres-ul" */
 ul {
     display: inline;
     list-style-type: disc;
     float: left;
 }
+
 .genres-list li {
     list-style: none;
     float: left;
@@ -217,12 +253,14 @@ ul {
     font-style: italic;
     font-size: 1.25rem;
 }
+
 /** content is the bullet */
 .genres-list li:before {
     content: '\2022';
     margin-left: 1em;
     margin-right: 1em;
 }
+
 /** .playthrough-card-container{
 position: relative;
 } */
@@ -236,6 +274,7 @@ position: relative;
     display: block;
     width: 100%;
 }
+
 .buttons-container {
     margin: 1vh;
     display: flex;
@@ -243,6 +282,7 @@ position: relative;
     float: left;
     width: 100%;
 }
+
 /**  width: auto; fixes text overflowing from button */
 .link-button {
     object-position: bottom;
@@ -253,11 +293,13 @@ position: relative;
     width: auto;
     font-size: 115%;
 }
+
 .buttons-container button, a {
     display: inline-block;
     margin: 1%;
     float: left;
 }
+
 .hr-separator {
     display: block;
     width: 100%;
@@ -275,6 +317,7 @@ position: relative;
     float: left;
     display: block;
 }
+
 .video-container {
     display: inline-block;
     padding-top: 10%;
@@ -283,6 +326,7 @@ position: relative;
     object-position: bottom right;
     float: left;
 }
+
 /** style the iframe of the video */
 iframe {
     object-position: top;
@@ -299,11 +343,13 @@ iframe {
     float: left;
     bottom: 0;
 }
+
 .playthrough-description {
     display: block;
     float: left;
     margin: 3%;
 }
+
 .playthrough-title {
     font-weight: bold;
     font-size: 20px;
@@ -311,6 +357,7 @@ iframe {
     float: left;
     display: block;
 }
+
 .playthrough-info-container p {
     font-size: 16px;
     float: left;
@@ -421,19 +468,25 @@ footer {
 }
 */
 .about-us-article {
+    display: block;
+    position: absolute;
     color: white;
-    font-size: 17px;
+    font-size: 20px;
     width: 90%;
+    left: 5%;
 }
+
 .red-alert {
     background-color: red;
 }
+
 .form-width {
     width: 30%;
     display: block;
     margin-left: 35%;
     margin-right: 35%;
 }
+
 .white-text {
     color: white;
 }
@@ -443,6 +496,8 @@ footer {
 .vay-footer { /** Don't use bottom: 0; will cause it to float up incorrectly */
     text-align: justify;
     position: absolute;
+    bottom: 0;
+    margin: 0.5%;
     width: 100%;
     padding-left: 47%;
     float: bottom;
@@ -458,6 +513,15 @@ footer p {
     color: red;
     font-weight: bold;
 }
+
+.error-section {
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+    margin: 3%;
+    text-align: center;
+}
+
 /**
 Colors
 dark blue (old nav text color) color: #587e91;

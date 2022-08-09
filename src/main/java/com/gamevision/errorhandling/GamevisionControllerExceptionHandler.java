@@ -1,30 +1,30 @@
 package com.gamevision.errorhandling;
 
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.ModelAndView;
 
-@Order(2)
+@Order(1)
 @ControllerAdvice(annotations = Controller.class) //for regular Controllers
-public class GamevisionControllerExceptionHandler {
+public class GamevisionControllerExceptionHandler { //or name it ObjectNotFoundAdvice
 
 
-    @ExceptionHandler({Exception.class})
-    public String handleError(Exception e, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("errorCause", e.getCause());
-        redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-        System.out.println(e.getCause().toString());
-        System.out.println(e.getMessage());
-       // Throwable cause = e.getCause();
-        return "error"; //changed from "redirect:error"
+    //   @ExceptionHandler({ObjectNotFoundException.class}) //nope
+    @ExceptionHandler(value = Exception.class)
+    //todo maybe Srpring has a fixed mapping for exception, so try with RE; still nope with RE
+    @ResponseStatus(value = HttpStatus.NOT_FOUND) //can't be always that, but heh
+    public ModelAndView onObjectNotFound(Exception ex) {
+        { //try without model but with MVC
+            ModelAndView modelAndView = new ModelAndView("error");
+            modelAndView.addObject("errorCause", ex.getCause());
+            modelAndView.addObject("errorMessage", ex.getMessage());
+            System.out.println(ex.getMessage());
+            return modelAndView;
+        }
     }
-
 }
 
-//Backup of the original
-//  @ExceptionHandler({Exception.class})
-//    public String handleError() {
-//        return "error"; //changed from "redirect:error"
-//    }

@@ -1,4 +1,4 @@
-package com.gamevision.errorhandling.errors;
+package com.gamevision.errors;
 
 public class ErrorApiResponse {
 

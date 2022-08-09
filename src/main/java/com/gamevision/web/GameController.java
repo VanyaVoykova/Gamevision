@@ -1,6 +1,7 @@
 package com.gamevision.web;
 
 import com.gamevision.errorhandling.exceptions.GameNotFoundException;
+import com.gamevision.errorhandling.exceptions.GameTitleExistsException;
 import com.gamevision.model.binding.GameAddBindingModel;
 import com.gamevision.model.binding.GameEditBindingModel;
 import com.gamevision.model.enums.GenreNameEnum;
@@ -69,20 +70,12 @@ public class GameController {
     @GetMapping("/games/add")
     //Check if Model model is necessary her/or still needed below - SS takes care for UserRegistrationBindingmodel or?
     public String addGame(Model model) { //model here to add attribute below
-        //add attribute here i/o with @ModelAttribute on a separate method, it's short enough
-        //Will add it with @ModelAttribute, so it's accessible for all here
-        //  if (!model.containsAttribute("gameAddBindingModel")) {
-        //      model.addAttribute("gameAddBindingModel", new GameAddBindingModel());
-        //  }
 
         //Text for the genre checkboxes labels
         //   List<String> allGenres = GenreNameEnum.values().stream().collect(Collectors.toList());
         model.addAttribute("allGenres", GenreNameEnum.values());// for th: each, text to display the full name with .getName() for the checkboxes
         return "game-add";
     }
-
-    //Can set a name for the @RequestParam here but it's not necessary - @RequestParam(name="genre")
-    //Give it a default value, can't chose null, just use ""
 
     //TODO cannot make checkboxes stay checked or be pre-checked when editing; addFlashAttribute
     @PostMapping("/games/add") //hopefully the model will keep the genres from the @GetMapping;
@@ -104,10 +97,6 @@ public class GameController {
         }
 
 
-//Nope, KISS, let admin add just one walkthrough upon adding a game for now
-
-
-        //genre.equals("") || genre.isEmpty()) {
         try {
             if (genre == null) { //TODO: doesn't cut it, it tries to create it without genres! It's ok with chosen genres.
                 redirectAttributes.addFlashAttribute("errorMessage", "Please select at least one genre."); //or with model???
@@ -116,8 +105,6 @@ public class GameController {
             }
             gameAddBindingModel.setGenres(genre); //List<String> from the checkboxes
             gameAddBindingModel.setAddedBy(userDetails.getUsername()); //Get the username from the Principal separately, allow it to be null upon initial binding
-
-            //  GameAddServiceModel gameServiceModel = modelMapper.map(gameAddBindingModel, GameAddServiceModel.class);
 
             //List<String> playthroughTitles and List<String> playthroughVideoUrls -> to PlaythroughEntity with nested for-cycle in @Service
 
@@ -130,9 +117,15 @@ public class GameController {
             return "redirect:/games/add";
         }
 
-        GameAddServiceModel gameAddServiceModel = gameService.addGame(gameAddBindingModel); //FIXME NULL?!? But it DOES add the game to the repo
-        Long gameId = gameAddServiceModel.getId(); //saves the game, returns its ID
-        return "redirect:/games/" + gameId; //todo sth wrong in controller/view playthrough collection is filled
+        try {
+            GameAddServiceModel gameAddServiceModel = gameService.addGame(gameAddBindingModel);
+            Long gameId = gameAddServiceModel.getId(); //saves the game, returns its ID
+            return "redirect:/games/" + gameId;
+        } catch (GameTitleExistsException ex) {
+            redirectAttributes.addFlashAttribute("gameAddBindingModel", gameAddBindingModel);
+            redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage()); //or with model???
+            return "redirect:/games/add";
+        }
 
     }
 
@@ -218,8 +211,7 @@ public class GameController {
 
 
     // No More @ModelAttribute, Spring Security takes care of it... or not
-
-    //check with this just in case
+    //check with this just in case - seems necessary
     @ModelAttribute("gameAddBindingModel")
     public GameAddBindingModel gameAddbindingModel() {
         return new GameAddBindingModel();

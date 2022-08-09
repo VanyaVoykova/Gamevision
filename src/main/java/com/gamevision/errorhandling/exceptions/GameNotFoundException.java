@@ -11,5 +11,4 @@ private static final String MESSAGE = "Game not found.";
         super(MESSAGE);
     }
 
-
 }

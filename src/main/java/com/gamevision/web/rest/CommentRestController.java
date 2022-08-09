@@ -1,13 +1,12 @@
 package com.gamevision.web.rest;
 
-import com.gamevision.errorhandling.errors.ErrorApiResponse;
 import com.gamevision.errorhandling.exceptions.GameNotFoundException;
 import com.gamevision.errorhandling.exceptions.UserNotFoundException;
+import com.gamevision.errors.ErrorApiResponse;
 import com.gamevision.model.binding.CommentBindingModel;
 import com.gamevision.model.servicemodels.CommentAddServiceModel;
 import com.gamevision.model.view.CommentViewModel;
 import com.gamevision.service.CommentService;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +14,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController //comments/forum - very basic version for general comments, no thread/topic creation,
