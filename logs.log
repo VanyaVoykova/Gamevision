@@ -22659,3 +22659,5 @@ java.lang.IllegalStateException: Could not resolve parameter [0] in public org.s
     where
         gameentity0_.id=?
 2022-08-09 15:55:56.092 TRACE 8036 --- [http-nio-8080-exec-6] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [33]
+2022-08-09 16:22:28.789  INFO 8036 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2022-08-09 16:22:28.793  INFO 8036 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
