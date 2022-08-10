@@ -5,6 +5,7 @@ import com.gamevision.model.entity.GameEntity;
 import com.gamevision.model.servicemodels.GameAddServiceModel;
 import com.gamevision.model.servicemodels.GameEditServiceModel;
 import com.gamevision.model.view.GameCardViewModel;
+import com.gamevision.model.view.GameCarouselViewModel;
 import com.gamevision.model.view.GameViewModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +15,7 @@ import java.util.List;
 public interface GameService {
     Page<GameCardViewModel> getAllGames(Pageable pageable);
 
-    List<GameCardViewModel> getGamesForCarousel();
+    List<GameCarouselViewModel> getGamesForCarousel();
 
     void refreshCache();
 

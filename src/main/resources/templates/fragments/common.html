@@ -7,30 +7,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- for device scaling -->
 
     <!-- for the scripts to work -->
-    <!-- todo check naming here with the scripts CANNOT BE FOUND-->
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
     <!-- FIXME: Bootstrap is fickle without the CDN, carousel and some CSS get screwed, see if you can avoid CDN -->
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous"> -->
-    <!-- HTML style
-        <link rel="stylesheet" href="../../static/css/bootstrap.min.css"/>
-        <link rel="stylesheet" href="../../static/css/styles.css"/>
-         <link rel="stylesheet" href="../../static/css/reset-css.css"/>
-          <link rel="stylesheet" href="../../static/css/modal.css"/>
+    <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+             integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous"> -->
 
-           <link rel="stylesheet" href="/css/style.css"/>
-        -->
 
-    <!-- Thymeleaf style -->
+    <!-- Old Bootstrap min.css CDN -->
     <!-- Bootstrap is fickle, ruins carousel and nav formats with the local file TODO: try using the local bootstrap.min.css file  -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <!--  <link rel="stylesheet" href="static/css/bootstrap.min.css"/> -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- for the homepage carousel, I don't remember what part of it needed this -->
+    <!-- local bootstrap css -->
+    <!-- <link rel="stylesheet" href="/css/bootstrap.min.css"/>-->
+
+    <!-- for the homepage carousel, Bootstrap JS needs this to work-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
 
     <!-- the above with local files -->
     <!-- <script src="/scripts/jquery-3.5.1.slim.min.js"></script> REMOVED-->
@@ -55,6 +48,7 @@
             integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
             crossorigin=""></script>
     -->
+    <!-- CARDS CSS <link rel="stylesheet" href="/css/cards.css"/> -->
 
 
 </head>
@@ -88,7 +82,7 @@
             <li class="nav-item" sec:authorize="isAuthenticated()">
 
                 <!-- Logout has to be POST, maybe the default GET works only with disabled CSRF -->
-            <li sec:authorize="isAuthenticated()" class="nav-item" >
+            <li class="nav-item" sec:authorize="isAuthenticated()">
                 <form th:action="@{/users/logout}" th:method="POST">
                     <!-- not button, will screw Bootstrap style  <button type="submit" class="nav-link">Logout</button> -->
                     <!-- check token -->
@@ -102,18 +96,16 @@
         </ul>
 
         <!---------------------------------- visible only for ADMINS  --------------------------------------->
-            <th:block sec:authorize="hasAuthority('ROLE_ADMIN')">
-                <ul class="nav navbar-nav ms-auto center-navbar" id="center-navbar">
-                    <li class="nav-item"><a id="link-to-admin-panel" th:href="@{/admin}">Admin</a></li>
-                </ul>
-            </th:block>
-
+        <th:block sec:authorize="hasAuthority('ROLE_ADMIN')">
+            <ul class="nav navbar-nav ms-auto center-navbar" id="center-navbar">
+                <li class="nav-item"><a id="link-to-admin-panel" th:href="@{/admin}">Admin</a></li>
+            </ul>
+        </th:block>
 
 
     </nav>
 
 </header>
-
 
 
 <!-- <script src="../../static/scripts/bootstrap.bundle.min.js"></script> -->

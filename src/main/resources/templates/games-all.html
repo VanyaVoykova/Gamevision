@@ -10,23 +10,17 @@
     <div class="container-fluid">
         <!-- <h2 class="text-center text-white mt-5">All Games</h2> -->
         <h1>All Games</h1>
+        <h1 th:if="${noGames}" th:text="${noGames}"></h1>
         <div th:each="game : ${games}"
              th:object="${game}"
-             class="row mx-auto d-flex flex-row justify-content-center">
-            <div class="col-sm-6">
-                <!-- TODO: th:src="*{imageUrl} etc.
-                View game:   <a href = "game.html" th:href="@{/games/{gameId}(gameId=*{id})}"> View game </a>
-                 -->
+             class="game-card-container row mx-auto d-flex flex-row justify-content-center">
+            <div class="game-card col-sm-6">
+
                 <div class="card border-light mb-3">
-                    <img class="card-img-top" th:src="*{titleImageUrl}" alt="Card image cap">
+                    <img alt="Card image cap" class="card-title-img card-img-top" th:src="*{titleImageUrl}">
                     <div class="card-body">
                         <h5 class="card-title" th:text="*{title}">Game title</h5>
-                        <p class="card-text" th:text="*{description}">HARDCODED DUMMY. Game description. Lorem ipsum
-                            dolor sit amet, consectetur adipiscing elit.
-                            Donec at est egestas, consequat nibh quis, rutrum enim. Quisque at tortor erat. Aliquam
-                            rutrum mi sit amet neque sodales imperdiet. Donec hendrerit semper justo, in tempus purus
-                            ullamcorper in. Praesent venenatis lobortis velit consequat iaculis. Sed bibendum dapibus
-                            ante, ut lobortis lacus pulvinar nec.</p>
+                        <p class="card-text" th:text="*{description}">Longest game description.</p>
                         <!-- List<String> genres in GameCardViewModel and GameViewModel-->
                         <div class="genres-container">
                             <p>Genre(s):</p>
@@ -133,5 +127,5 @@
 <script th:src="@{/scripts/delete-confirm.js}"></script> <!-- for delete button functionality -->
 
 </body>
-<footer th:replace="fragments/common::footer"></footer>
+
 </html>

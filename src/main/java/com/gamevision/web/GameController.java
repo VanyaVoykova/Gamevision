@@ -8,10 +8,12 @@ import com.gamevision.model.enums.GenreNameEnum;
 import com.gamevision.model.servicemodels.GameAddServiceModel;
 import com.gamevision.model.servicemodels.GameEditServiceModel;
 import com.gamevision.model.user.GamevisionUserDetails;
+import com.gamevision.model.view.GameCardViewModel;
 import com.gamevision.model.view.GameViewModel;
 import com.gamevision.service.GameService;
 import com.gamevision.service.PlaythroughService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -46,6 +48,11 @@ public class GameController {
                                    direction = Sort.Direction.ASC,
                                    page = 0,
                                    size = 12) Pageable pageable) {
+        Page<GameCardViewModel> allGames = gameService.getAllGames(pageable);
+        if (allGames.isEmpty()) {
+            model.addAttribute("noGames", "There are currently no games available.");
+            return "games-all";
+        }
 
         model.addAttribute("games", gameService.getAllGames(pageable));
         return "games-all";

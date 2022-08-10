@@ -35,12 +35,13 @@
             <hr class="hr-separator">
 
             <div class="buttons-container">
-
+ <!-- admins only -------------------------------------------------->
                 <a class="link-button btn btn-info w-50" id="add-playthrough-btn"
                    sec:authorize="hasRole('ROLE_ADMIN')"
                    th:href="@{/games/{gameId}/playthroughs/add/(gameId=*{id})}">Add a playthrough</a>
-                <!-- admins only -->
 
+                <a class="link-button btn btn-info w-50" sec:authorize="hasRole('ROLE_ADMIN')"
+                   th:href="@{/games/{gameId}/edit(gameId=*{id})}">Edit game</a>
                 <!-- DELETE GAME th:href="@{/games/{gameId}/delete/(gameId=*{id})}  link fetched with JS todo check if id can be obtained with th:id-->
                 <a class="delete-btn delete-game-btn link-button btn btn-info w-50" href="/"
                    sec:authorize="hasRole('ROLE_ADMIN')"
@@ -50,7 +51,7 @@
                 <button class="link-button btn btn-info w-50" id="like-btn" sec:authorize="isAuthenticated()">Like
                 </button>
 
-
+                <!------------------------------------------------------------------------>
                 <a class="link-button btn btn-info w-50" id="playthroughs-btn"
                    th:href="@{/games/{gameId}/playthroughs/all/(gameId=*{id})}">Playthroughs</a>
                 <!--  <button id="playthroughs-btn" class="link-button btn btn-info w-50">Playthroughs</button> -->
@@ -107,5 +108,5 @@
 <script th:src="@{/scripts/comments.js}"></script> <!-- for REST controller -->
 <script th:src="@{/scripts/delete-confirm.js}"></script> <!-- for delete button functionality -->
 </body>
-<footer th:replace="fragments/common::footer"></footer>
+
 </html>

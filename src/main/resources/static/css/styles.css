@@ -1,10 +1,18 @@
 body {
     background-color: #03080E;
-    background-blend-mode: luminosity;
+    background-blend-mode: color-dodge;
+    /** background-blend-mode: luminosity; */
+    position: relative;
+    background-image: url(https://res.cloudinary.com/dyv2crejp/image/upload/v1660128935/Gamevision/Images/Design/blue-gaming-background_Legend-of-the-White-Snake-Lady-Slot-Machine-YGGDRASIL_zntleb.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
+
 #main-navbar {
+    display: block;
     background-color: #131A21;
+    width: 100%;
 }
 
 #left-navbar {
@@ -26,6 +34,27 @@ body {
     margin-left: 33%;
 }
 
+/** USER PROFILE ***********************************************/
+.side-nav {
+    width: 15%;
+    float: left;
+    position: absolute;
+    display: inline-block;
+
+}
+
+.user-profile-panel {
+    width: 80%;
+    display: inline-block;
+    margin-left: 15%;
+}
+
+.profile-edit-container {
+    float: left;
+    display: inline-block;
+}
+
+
 .side-nav li a, .navbar ul li a, #logout-btn {
     font-size: 1vw;
     font-family: 'Electrolize', serif;
@@ -34,6 +63,7 @@ body {
     display: inline;
     line-height: 38px;
     width: 100%;
+    background: inherit;
 }
 
 #link-to-admin-panel {
@@ -53,12 +83,15 @@ body {
 .logout-btn-container {
     display: inline-block;
     margin-top: 9%;
+    border: 0;
+    outline: none;
 }
 
 #login-btn {
     display: block;
     margin-top: 20%;
     margin-left: 20%;
+    border: 0;
 
 }
 
@@ -66,9 +99,17 @@ body {
 /** also keeps footer in place */
 main {
     position: relative;
+    display: block;
     margin: auto;
     width: 90%;
+    height: 90%;
 }
+
+.content-wrapper {
+    display: block;
+
+}
+
 
 /** margin: 2rem auto 4rem;
   width: 90%;
@@ -104,7 +145,7 @@ h1 {
     font-size: 2rem;
     font-weight: bold;
     color: white;
-    margin: 3%;
+    margin: 5% 3% 3% 3%;
     text-align: center;
 }
 
@@ -197,6 +238,10 @@ figure img {
 
 .card-body {
     background-color: #131A21;
+}
+
+.card-title-img {
+    width: 100%;
 }
 
 .bottom-card-text {
@@ -308,6 +353,64 @@ position: relative;
     float: left;
 }
 
+/****************************************************** games-all */
+.game-card-container {
+    left: 30%;
+}
+
+.game-card {
+    width: 50%;
+    margin-left: 25%;
+    margin-bottom: 3%;
+}
+
+
+/**================================================HOME HOME - ------------------------------------------*/
+.homepage-title-container {
+    display: block;
+}
+
+.no-games-quote {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-style: italic;
+    text-align: center;
+}
+
+.no-games-author {
+    color: white;
+    font-size: 1.2rem;
+    font-style: italic;
+    text-align: center;
+    padding-left: 20%;
+    margin-top: 1.5%;
+}
+
+.home-card-container {
+    display: block;
+}
+
+/** game cards */
+.home-card-container {
+    left: 30%;
+    float: top;
+}
+
+
+.home-game-card {
+    width: 20%;
+    display: inline-block;
+    float: left;
+}
+
+
+.home-game-card:hover {
+    width: 30%;
+    border: 3px solid dodgerblue;
+}
+
+/**----------------------------------------------------------------------------*/
 /** Playthroughs */
 .playthrough-card {
     margin: 1%;
@@ -496,17 +599,17 @@ footer {
 .vay-footer { /** Don't use bottom: 0; will cause it to float up incorrectly */
     text-align: justify;
     position: absolute;
-    bottom: 0;
-    margin: 0.5%;
-    width: 100%;
+    top: 1800%;
+    margin: 1%;
+    width: 90%;
     padding-left: 47%;
-    float: bottom;
     justify-content: space-around;
 }
 
 footer p {
     color: gray;
 }
+
 
 /** ---------------------------------ERROR VISUALIZATION----------------------------- */
 .exception-message {
@@ -525,5 +628,26 @@ footer p {
 /**
 Colors
 dark blue (old nav text color) color: #587e91;
+
+*/
+
+
+/** HOMEPAGE TESTING GROUND*/
+
+
+/**
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 */

@@ -3,7 +3,7 @@ package com.gamevision.model.enums;
 public enum GenreNameEnum {
     RPG("Role-playing"),
     SANDBOX("Sandbox"),
-    RTS("Real-time strategy"),
+    STRATEGY("Strategy"),
     SHOOTER("Shooter"),
     SIMULATION("Simulation"),
     SPORTS("Sports"),
