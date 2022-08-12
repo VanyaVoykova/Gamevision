@@ -47,50 +47,6 @@ public class AdminRestControllerTest {
         testAdmin = testDataUtils.createTestAdmin(ADMINNAME);
         testUser = testDataUtils.createTestUser(USERNAME);
     }
-        //  mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        //Setup actual admin and user with the @Autowired repos and services
-        //    UserEntity admin = new UserEntity();
-
-        //    UserRoleEntity adminRole = userRoleRepository.findByName(UserRoleEnum.ADMIN).orElse(null);
-        //    UserRoleEntity userRole = userRoleRepository.findByName(UserRoleEnum.USER).orElse(null);
-
-        //    admin.setUsername(ADMINNAME)
-        //            .setPassword(passwordEncoder.encode(ADMINPASSWORD))
-        //            .setEmail("admin@example.com")
-        //            .setUserRoles(Set.of(userRole, adminRole))
-        //            .setActive(true)
-        //            .setGames(new HashSet<>())
-        //            .setFavouritePlaythroughs(new HashSet<>());
-
-        //    testAdmin = userRepository.save(admin);
-
-
-        //    //Add UserDetails
-        //    List<GrantedAuthority> authorities = testAdmin.getUserRoles().stream().map(r -> {
-        //        return new SimpleGrantedAuthority("ROLE_".concat(r.getName().name()));
-        //    }).collect(Collectors.toList());
-
-        //    Long userId = testAdmin.getId();
-        //    this.gamevisionUserDetailsAdmin = new GamevisionUserDetails(testAdmin.getUsername(), testAdmin.getPassword(), testAdmin.getEmail(),
-        //            testAdmin.isActive(), authorities);
-
-        //    //todo USER
-
-        //set up games and playthroughs since users are initiallized with empty collections of those entitiees
-
-        //  GameEntity testGame = testDataUtils.createTestGame()
-        //these two include initRoles()
-        //Make sure data is valid and UNIQUE fields are UNIQUE, Spring may complain about user roles when it's actually the same copied email for both
-        // testUser = testDataUtils.createTestUser("TestUser");
-        // testAdmin = testDataUtils.createTestAdmin("TestAdmin");
-
-        //  adminService = new AdminServiceImpl(userRepository, userRoleRepository, userService);
-
-        //   adminRestControllerToTest = new AdminRestController(adminService); //follow the way we inject service in the controller in actual app
-
-
-
-
 
     @AfterEach
     void tearDown() {
@@ -106,14 +62,6 @@ public class AdminRestControllerTest {
     @Test
     @WithMockUser(username = ADMINNAME, roles = {"ADMIN", "USER"})
     void adminPanelShown() throws Exception {
-
-        //  mockMvc.perform(post("/users/login")
-        //          .param("TestAdmin")
-        //          .param("testAdminPass")
-        //          .with(csrf()))
-        //          .andExpect(redirectedUrl("/"));
-//
-
         mockMvc.perform(get("/admin"))
                 //  .andExpect(status().isOk());
                 .andExpect(view().name("admin-panel")); //no ModelAndView found
