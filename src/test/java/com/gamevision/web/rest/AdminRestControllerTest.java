@@ -10,11 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @SpringBootTest
@@ -65,6 +69,35 @@ public class AdminRestControllerTest {
         mockMvc.perform(get("/admin"))
                 //  .andExpect(status().isOk());
                 .andExpect(view().name("admin-panel")); //no ModelAndView found
+    }
+
+
+
+    @Test
+    @WithMockUser(username = ADMINNAME, roles = {"ADMIN", "USER"})
+    void promoteExistingUserToAdminSuccessfully() throws Exception {
+
+        mockMvc.perform(put("/admin/promote")
+                .content(USERNAME)
+                        .contentType("application/json")
+                        .accept("application/json")
+                .with(csrf()))
+                .andExpect(status().is(200));
+                //  .andExpect(status().isOk());
+              //  .andExpect(view().name("admin-panel")); //no ModelAndView found
+    }
+
+    @Test
+    @WithMockUser(username = ADMINNAME, roles = {"ADMIN", "USER"})
+    void doesNotPromoteNonexistentUser() throws Exception {
+
+        mockMvc.perform(put("/admin/promote")
+                        .content("DoesNotExist")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf()))
+                .andExpect(status().is(404));
+        //  .andExpect(status().isOk());
+        //  .andExpect(view().name("admin-panel")); //no ModelAndView found
     }
 
 

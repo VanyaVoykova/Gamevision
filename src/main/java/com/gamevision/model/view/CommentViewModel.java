@@ -12,6 +12,14 @@ public class CommentViewModel {
     public CommentViewModel() {
     }
 
+    public CommentViewModel(Long id, String authorUsername, String text, int likesCounter, String dateTimeCreated) {
+        this.id = id;
+        this.authorUsername = authorUsername;
+        this.text = text;
+        this.likesCounter = likesCounter;
+        this.dateTimeCreated = dateTimeCreated;
+    }
+
     public Long getId() {
         return id;
     }

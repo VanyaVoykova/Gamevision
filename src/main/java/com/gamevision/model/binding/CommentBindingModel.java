@@ -20,6 +20,10 @@ public class CommentBindingModel {
     public CommentBindingModel() {
     }
 
+    public CommentBindingModel(String text) {
+        this.text = text;
+    }
+
     public String getText() {
         return text;
     }
