@@ -160,7 +160,7 @@ public class GameController {
         return "game-edit";
     }
 
-    @PostMapping("/games/{id}/edit") //"genre" is the <input> name, so the request param's name has to be the same
+    @PatchMapping("/games/{id}/edit") //"genre" is the <input> name, so the request param's name has to be the same
     public String editGameSubmit(@PathVariable("id") Long id, @RequestParam(required = false) List<String> genre, GameEditBindingModel gameEditBindingModel, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
 
         List<String> chosenGenres = genre; //need a different name from genre for the flash attribute because it's used for the checkboxes' text

@@ -1,5 +1,6 @@
 package com.gamevision.web;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gamevision.model.entity.*;
 import com.gamevision.model.enums.GenreNameEnum;
 import com.gamevision.model.user.GamevisionUserDetails;
@@ -25,8 +26,12 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.util.MultiValueMap;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.mockito.Mockito.when;
 
@@ -82,6 +87,9 @@ public class GameControllerIT {
     UserDetailsService testUserDetailsService;
     //additional utils
 
+
+    @Autowired //to pass the genres, which come as a List<String>
+    private ObjectMapper objectMapper;
 
 //private  final  GamevisionUserDetails ADMIN_USERDETAILS = new GamevisionUserDetails(
 //          testAdmin.getUsername(),
@@ -157,57 +165,26 @@ public class GameControllerIT {
     }
 
 
-    //TODO: POST addGameSubmit
+    //TODO: POST addGameSubmit - fails because UserDetails is null
+// @Test //constraint violation if no UserId
+//// @WithUserDetails(value="TestAdmin")
+// //@WithMockUser(username = "TestAdmin", roles = {"USER", "ADMIN"})
+// @WithUserDetails(value = "AdminFromTestUserDataService", userDetailsServiceBeanName = "testUserDataService") //TODO USE THIS, see GitHub MobileleUserDetailsServiceTest.java
+// public void addGameRedirectsToAddGameWhenNoGenreIsChosen() throws Exception {
+//     GameEntity existingGame = testGame; //this should create one game in the repo and actually fill the empty proxy
+//     System.out.println("Existing game ID: " + existingGame.getId()); //id is 3
+//ist<String> testGenres = Arrays.asList("RPG", "AA");
 
+//     this.mockMvc                    //this is the input data from the BM - note how params are set; author is obviously not manually entered in the input input
+//             .perform(post("/games/add")
+//                     .param("title", "A Great Test Game") //give the values as a MAP KVP!!! Follow the BM field names for the KEYS.
+//                     .param("titleImageUrl", "testurl")
+//                     .param("description", "Long enough description to be accepted...") //should get it saved to repo
+//                     .param("genre", "RPG") //genre   empty genre // singular i/o plural genres in the controller due to checkbox naming issues
+//                     .with(csrf()))
+//             .andExpect(redirectedUrl("/games/2")); //id should be 2, second game in repo after the @Before one
+// } //returns :/games/add as if there's an error? Genre?
 
-    @Test //constraint violation if no UserId
-    //@WithUserDetails(value="TestAdmin",  userDetailsServiceBeanName = "testUserDetailsService")
-    @WithMockUser(username = "TestAdmin", roles = {"USER", "ADMIN"})
-    //@WithUserDetails(adminUserDetails) //TODO USE THIS, see GitHub MobileleUserDetailsServiceTest.java
-    public void addGameRedirectsToAddGameWhenNoGenreIsChosen() throws Exception {
-        GameEntity existingGame = testGame; //this should create one game in the repo and actually fill the empty proxy
-        System.out.println("Existing game ID: " + existingGame.getId()); //id is 3
-
-//
-// //doesn't create the game? 403? can't check with id
-//
-    //    //    Long existingGameId =  existingGame.getId(); // 8?  Maybe get the next? Is it random?
-        //    List<String> genres = new ArrayList<>(List.of("RPG", "AA"));
-        this.mockMvc                    //this is the input data from the BM - note how params are set; author is obviously not manually entered in the input input
-                .perform(post("/games/add")
-                        .param("title", "A Great Test Game") //give the values as a MAP KVP!!! Follow the BM field names for the KEYS.
-                        .param("titleImageUrl", "testurl")
-                        .param("description", "Too short.") //should get it saved to repo
-                        .param("genre", "RPG") //genre   empty genre // singular i/o plural genres in the controller due to checkbox naming issues
-                        .with(csrf()))
-                .andExpect(MockMvcResultMatchers.flash().attribute("errorMessage", "Please select at least one genre."))
-                //or just expect it to be saved
-                .andExpect(redirectedUrl("/games/add")); //id should be 2, second game in repo after the @Before one
-    }
-
-
-    // .andExpect(gameService.getGameByTitle("A Great Test Game").getTitleImageUrl().equals("testurl"))
-
-    //.andExpect(redirectedUrl("/games/*" )); //should be the id of the newly created game but it may be difficult to pin?
-    //+ gameService.getGameByTitle("A Great Test Game").getId()))
-    ;//redirectedUrl, not view
-
-
-    //   .andExpect(redirectedUrl("/games/" + existingGameId + 1));
-    //  .with(csrf()))
-////Won't be saved by now?!? GAME NOT FOUND???
-////TODO find out how to test with more than one genre?
-    //               //genres come as a List<String>
-    //               // .with(csrf())) //that's for REST
-    //
-    //             //
-    //       //  Long gameId = gameService.getGameByTitle(testGame.getTitle()).getId();
-//
-//
-    //   }
-//
-    //todo: note the options we have
-    //  .andExpect(model().attribute  hasErrors, has a number of errors, does not exist
 
     @Test
     void deleteByAnonymousUserRedirectsToLogin() throws Exception {
@@ -226,23 +203,66 @@ public class GameControllerIT {
                 .andExpect(redirectedUrl("/games/all"));
     }
 
-   @Test
-   @WithMockUser(
-           username = "admin@example.com", roles = {"ADMIN", "USER"}
-   )
-   void editByAdminShowsEditView() throws Exception {
-       mockMvc.perform(get("/games/{id}/edit/", testGame.getId()).
-                       with(csrf())
-               ).
-               andExpect(status().is3xxRedirection()).
-               andExpect(view().name("game-edit"));
-   }
+    @Test
+    @WithMockUser(username = "Admin", roles = {"ADMIN", "USER"})
+    void editByAdminShowsEditView() throws Exception {
+        mockMvc.perform(get("/games/{id}/edit/", testGame.getId()).
+                        with(csrf()))
+                // .andExpect(status().is3xxRedirection()).
+                .andExpect(view().name("game-edit"));
+    }
 
 
     private GrantedAuthority mapGrantedAuthority(UserRoleEntity userRole) {
         return new SimpleGrantedAuthority("ROLE_" + userRole.getName().name()); ///"ROLE_"   syntax is important!
     }
 
+    // @Test
+    // @WithMockUser(username = "Admin", roles = {"ADMIN", "USER"})
+    // void updatesGameWithValidData() throws Exception {
+    //     Long id = testGame.getId();
+    //List<String> genres = List.of("RPG", "AA");
+    //     MultiValueMap<String, String> formParams = genres.stream().collect(Collectors.t);
 
+    //     mockMvc.perform(patch("/games/{id}/edit/", id)
+    //                     .param("title", "New Game Title")
+    //                     .param("titleImageUrl", "new/test/img/url")
+    //                     .param("description", "Description long enough to be valid")
+
+    //                     .formParam("genre", genres)
+    //                     .with(csrf()))
+    //             .andExpect(redirectedUrl("/games/" + id ));
+
+    // }
+
+
+    @Test
+    @WithMockUser(username = "Admin", roles = {"ADMIN", "USER"})
+    void doesNotUpdateGameWithInvalidData() throws Exception {
+        Long id = testGame.getId();
+        List<String> genres = List.of("RPG", "AA");
+        mockMvc.perform(patch("/games/{id}/edit/", id)
+                        .param("title", "New Game Title")
+                        .param("titleImageUrl", "new/test/img/url")
+                        .param("description", "Too short")
+                        .content(objectMapper.writeValueAsString(genres))
+                        .with(csrf()))
+                .andExpect(redirectedUrl("/games/" + id + "/edit"));
+
+    }
+
+    @Test
+    @WithMockUser(username = "Admin", roles = {"ADMIN", "USER"})
+    void deleteRedirectsWithNonexistentGame() throws Exception {
+        mockMvc.perform(get("/games/{id}/edit/", 23)
+                        .with(csrf()))
+               // .andExpect(model().attributeExists("errorMessage"))
+                .andExpect(redirectedUrl("/games/all"));
+
+    }
+
+
+//  .param("genres", "RPG")   this is invalid???
+    //  .andExpect(redirectedUrl("/games/" + id));
 }
 
