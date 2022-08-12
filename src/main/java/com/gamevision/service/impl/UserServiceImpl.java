@@ -42,8 +42,8 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(UserRepository userRepository,
                            UserRoleRepository userRoleRepository,
                            PasswordEncoder passwordEncoder,
-                           UserDetailsService appUserDetailsService,
-                           ProfilePictureRepository profilePictureRepository, @Value("${spring.security.user.password}") String adminPass, ModelMapper modelMapper) { //from application.properties; there is also a default pass shown in the console when you start the app
+                           UserDetailsService appUserDetailsService,//"${spring.security.user.password}"
+                           ProfilePictureRepository profilePictureRepository, @Value("admin") String adminPass, ModelMapper modelMapper) { //from application.properties; there is also a default pass shown in the console when you start the app
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;

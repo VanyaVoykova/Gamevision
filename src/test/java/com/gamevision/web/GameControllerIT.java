@@ -1,28 +1,39 @@
 package com.gamevision.web;
 
-import com.gamevision.model.entity.CommentEntity;
-import com.gamevision.model.entity.GameEntity;
-import com.gamevision.model.entity.PlaythroughEntity;
-import com.gamevision.model.entity.UserEntity;
+import com.gamevision.model.entity.*;
 import com.gamevision.model.enums.GenreNameEnum;
+import com.gamevision.model.user.GamevisionUserDetails;
 import com.gamevision.repository.GameRepository;
 import com.gamevision.repository.GenreRepository;
+import com.gamevision.repository.UserRepository;
 import com.gamevision.repository.UserRoleRepository;
 import com.gamevision.service.GameService;
+import com.gamevision.service.GamevisionUserDetailsService;
 import com.gamevision.util.TestDataUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import java.util.ArrayList;
+
+import static org.mockito.Mockito.when;
+
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @SpringBootTest
@@ -38,7 +49,8 @@ public class GameControllerIT {
     GameEntity testGame;
     PlaythroughEntity testPlaythrough;
     CommentEntity testComment;
-
+    @Autowired //autowire all necessary repos and services, then assign to them the ready entities from TestDataUtils
+    private MockMvc mockMvc; //for sending HTTP requests to the test server TODO cannot autowire?!?
 
     //  @Autowired
     //  private PlaythroughRepository playthroughRepository;
@@ -47,10 +59,17 @@ public class GameControllerIT {
     //roles and genres are hardcoded by nature, hence don't require additional data setup, no need to create anything more
     @Autowired
     private UserRoleRepository userRoleRepository;
+
+    //No mock, test the real deal
+    // @Mock
+    // UserRepository userRepository; //mock, so we can get user id etc.
+    @Autowired
+    private UserRepository userRepository;
+
+
     @Autowired //hardcoded by nature, can be used as it is
     private GenreRepository genreRepository;
-    //  @Autowired
-    //  private UserRepository userRepository;
+
     @Autowired
     private GameRepository gameRepository; //needed to check if empty for no games message
     @Autowired
@@ -58,11 +77,22 @@ public class GameControllerIT {
     //or use the prepared TestDataUtils
     @Autowired
     private TestDataUtils testDataUtils;
-    //additional utils
-    @Autowired //autowire all necessary repos and services, then assign to them the ready entities from TestDataUtils
-    private MockMvc mockMvc; //for sending HTTP requests to the test server TODO cannot autowire?!?
+
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    UserDetailsService testUserDetailsService;
+    //additional utils
+
+
+//private  final  GamevisionUserDetails ADMIN_USERDETAILS = new GamevisionUserDetails(
+//          testAdmin.getUsername(),
+//          testAdmin.getPassword(),
+//          testAdmin.getEmail(),
+//          testAdmin.isActive(),
+//          testAdmin.getUserRoles().stream()
+//                  .map(this::mapGrantedAuthority)
+//                  .toList()
+//  );
+
 
     @BeforeEach
     public void setUp() { //saving to repos included
@@ -71,23 +101,14 @@ public class GameControllerIT {
         testGame = testDataUtils.createTestGame(testAdmin);
         testPlaythrough = testDataUtils.createTestPlaythrough(testAdmin);
         testComment = testDataUtils.createTestComment(testUser);
+
     }
 
-    // @AfterEach
-    // public void tearDown() {
-    //     this.commentRepository.deleteAll();
-    //     this.playthroughRepository.deleteAll();
-    //     this.gameRepository.deleteAll();
-    //     this.genreRepository.deleteAll();
-    //     this.userRepository.deleteAll();
-    //     this.userRoleRepository.deleteAll();
-    // }
 
     @AfterEach
-    void tearDown() {
+    public void tearDown() {
         testDataUtils.wipeDatabase();
     }
-
 
     @Test
     void allGamesViewShown() throws Exception {
@@ -139,31 +160,47 @@ public class GameControllerIT {
     //TODO: POST addGameSubmit
 
 
-    //   @Test //constraint violation if no UserId
-    //@WithMockUser(username = "TestAdmin", roles = {"USER", "ADMIN"})
-    //  // @WithUserDetails(value="TestAdmin",  userDetailsServiceBeanName = "testUserDataService") //TODO USE THIS, see GitHub MobileleUserDetailsServiceTest.java
-    //   public void addGameWithValidData() throws Exception {
-    //       GameEntity existingGame = testGame; //this should create one game in the repo and actually fill the empty proxies
-    //       System.out.println("Existing game ID: " + existingGame.getId()); //id is 3
-    //       //Needs userId, but it's not contained in the mock
+    @Test //constraint violation if no UserId
+    //@WithUserDetails(value="TestAdmin",  userDetailsServiceBeanName = "testUserDetailsService")
+    @WithMockUser(username = "TestAdmin", roles = {"USER", "ADMIN"})
+    //@WithUserDetails(adminUserDetails) //TODO USE THIS, see GitHub MobileleUserDetailsServiceTest.java
+    public void addGameRedirectsToAddGameWhenNoGenreIsChosen() throws Exception {
+        GameEntity existingGame = testGame; //this should create one game in the repo and actually fill the empty proxy
+        System.out.println("Existing game ID: " + existingGame.getId()); //id is 3
+
 //
+// //doesn't create the game? 403? can't check with id
 //
-//
-    //       Long existingGameId =  existingGame.getId(); // 8?  Maybe get the next? Is it random?
-    //   //    List<String> genres = new ArrayList<>(List.of("RPG", "AA"));
-    //       this.mockMvc                    //this is the input data from the BM - note how params are set; author is obviously not manually entered in the input input
-    //               .perform(post("/games/add")
-    //                       .param("title", "A Great Test Game") //give the values as a MAP KVP!!! Follow the BM field names for the KEYS.
-    //                       .param("titleImageUrl", "testurl")
-    //                      .param("description", "Test description that has to be long enough.") //should get it saved to repo
-    //               .param("genre", "RPG")  //singular in the controller due to checkbox naming issues
-    //               .with(csrf()))
+    //    //    Long existingGameId =  existingGame.getId(); // 8?  Maybe get the next? Is it random?
+        //    List<String> genres = new ArrayList<>(List.of("RPG", "AA"));
+        this.mockMvc                    //this is the input data from the BM - note how params are set; author is obviously not manually entered in the input input
+                .perform(post("/games/add")
+                        .param("title", "A Great Test Game") //give the values as a MAP KVP!!! Follow the BM field names for the KEYS.
+                        .param("titleImageUrl", "testurl")
+                        .param("description", "Too short.") //should get it saved to repo
+                        .param("genre", "RPG") //genre   empty genre // singular i/o plural genres in the controller due to checkbox naming issues
+                        .with(csrf()))
+                .andExpect(MockMvcResultMatchers.flash().attribute("errorMessage", "Please select at least one genre."))
+                //or just expect it to be saved
+                .andExpect(redirectedUrl("/games/add")); //id should be 2, second game in repo after the @Before one
+    }
+
+
+    // .andExpect(gameService.getGameByTitle("A Great Test Game").getTitleImageUrl().equals("testurl"))
+
+    //.andExpect(redirectedUrl("/games/*" )); //should be the id of the newly created game but it may be difficult to pin?
+    //+ gameService.getGameByTitle("A Great Test Game").getId()))
+    ;//redirectedUrl, not view
+
+
+    //   .andExpect(redirectedUrl("/games/" + existingGameId + 1));
+    //  .with(csrf()))
 ////Won't be saved by now?!? GAME NOT FOUND???
 ////TODO find out how to test with more than one genre?
     //               //genres come as a List<String>
     //               // .with(csrf())) //that's for REST
-    //               .andExpect(redirectedUrl("/games/" + existingGameId + 1));
-    //             //  .andExpect(redirectedUrl("/games/" + gameService.getGameByTitle("A Great Test Game").getId()));//redirectedUrl, not view
+    //
+    //             //
     //       //  Long gameId = gameService.getGameByTitle(testGame.getTitle()).getId();
 //
 //
@@ -172,28 +209,40 @@ public class GameControllerIT {
     //todo: note the options we have
     //  .andExpect(model().attribute  hasErrors, has a number of errors, does not exist
 
-//   @Test
-//   void testDeleteByAnonymousUser_Forbidden() throws Exception {
-//       mockMvc.perform(delete("/games/{id}/delete", testGame.getId())   //note the {id} param syntax with ,
-//               .with(csrf())
-//               ).
-//               andExpect(status().is3xxRedirection())
-//               .andExpect(redirectedUrl("/games/all"));
-//       //TODO: check redirection url to login w/o schema
-//   }
+    @Test
+    void deleteByAnonymousUserRedirectsToLogin() throws Exception {
+        mockMvc.perform(delete("/games/{id}/delete", testGame.getId())   //note the {id} param syntax with ,
+                        .with(csrf()))
+                .andExpect(redirectedUrl("http://localhost/users/login")); //Spring Security redirects to login upon unauthorized requests
 
-//   @Test
-//   @WithMockUser(
-//           username = "admin@example.com",
-//           roles = {"ADMIN", "USER"}
-//   )
-//   void testDeleteByAdmin() throws Exception {
-//       mockMvc.perform(delete("/offers/{id}", testOffer.getId()).
-//                       with(csrf())
-//               ).
-//               andExpect(status().is3xxRedirection()).
-//               andExpect(view().name("redirect:/offers/all"));
-//   }
+    }
+
+    @Test
+    @WithMockUser(username = "Admin", roles = {"ADMIN", "USER"})
+    void successfulDeletionByAdminRedirectsToAllGamesPage() throws Exception {
+        mockMvc.perform(get("/games/{id}/delete", testGame.getId())
+                        .with(csrf()))
+                // .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/games/all"));
+    }
+
+   @Test
+   @WithMockUser(
+           username = "admin@example.com", roles = {"ADMIN", "USER"}
+   )
+   void editByAdminShowsEditView() throws Exception {
+       mockMvc.perform(get("/games/{id}/edit/", testGame.getId()).
+                       with(csrf())
+               ).
+               andExpect(status().is3xxRedirection()).
+               andExpect(view().name("game-edit"));
+   }
+
+
+    private GrantedAuthority mapGrantedAuthority(UserRoleEntity userRole) {
+        return new SimpleGrantedAuthority("ROLE_" + userRole.getName().name()); ///"ROLE_"   syntax is important!
+    }
 
 
 }
+

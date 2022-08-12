@@ -105,7 +105,7 @@ public class GameController {
 
 
         try {
-            if (genre == null) { //TODO: doesn't cut it, it tries to create it without genres! It's ok with chosen genres.
+            if (genre == null || genre.isEmpty()) { //TODO: doesn't cut it, it tries to create it without genres! It's ok with chosen genres.
                 redirectAttributes.addFlashAttribute("errorMessage", "Please select at least one genre."); //or with model???
                 redirectAttributes.addFlashAttribute("gameAddBindingModel", gameAddBindingModel); //binding result itself shouldn't have errors, so skipped here
                 return "redirect:/games/add";
