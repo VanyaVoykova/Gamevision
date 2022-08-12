@@ -106,7 +106,8 @@ public class TestDataUtils {
                 .setDescription("Test Playthrough Description")
                 .setAddedBy(addedBy);
 
-        return playthroughRepository.save(testPlaythrough);
+        PlaythroughEntity savedPlaythrough = playthroughRepository.save(testPlaythrough);
+        return savedPlaythrough;
     }
 
     public CommentEntity createTestComment(UserEntity author) {
