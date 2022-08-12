@@ -11,12 +11,16 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+@SpringBootTest
+@AutoConfigureMockMvc
 public class PlaythroughControllerTest {
     UserEntity testUser, testAdmin;
     GameEntity testGame;
@@ -39,7 +43,7 @@ public class PlaythroughControllerTest {
         testUser = testDataUtils.createTestUser("TestUser");
         testAdmin = testDataUtils.createTestAdmin("TestAdmin");
         testGame = testDataUtils.createTestGame(testAdmin);
-        testPlaythrough = testDataUtils.createTestPlaythrough(testGame, testAdmin);
+        testPlaythrough = testDataUtils.createTestPlaythrough(testAdmin);
         testComment = testDataUtils.createTestComment(testUser);
     }
 
@@ -51,7 +55,7 @@ public class PlaythroughControllerTest {
 
     @Test
     void showPlaythroughsForGame() throws Exception {
-        PlaythroughEntity pt = testDataUtils.createTestPlaythrough(testGame, testAdmin);
+        PlaythroughEntity pt = testDataUtils.createTestPlaythrough(testAdmin);
         testGame.getPlaythroughs().add(testPlaythrough);
         gameRepository.save(testGame); //update
         Long testGameId = testGame.getId();
