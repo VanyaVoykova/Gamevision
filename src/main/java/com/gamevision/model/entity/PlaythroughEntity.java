@@ -10,8 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name = "playthroughs")
 public class PlaythroughEntity extends BaseEntity {
-    @ManyToOne //there can be many playthroughs for one game - e.g. Paragon run and Renegade Run for ME;
-    private GameEntity game;
+
 
     @Size(min = 10, max = 40) //E.g. Sarcastic Dragon Age II run
     @Column(nullable = false)
@@ -31,14 +30,14 @@ public class PlaythroughEntity extends BaseEntity {
     private UserEntity addedBy;
 
     //TODO: for when comments for playthroughs are implemented
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-  private Set<CommentEntity> comments;
+///   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+/// private Set<CommentEntity> comments;
 
 
 
-    @PositiveOrZero
-    @Column(name = "likes")
-    private Integer likesCounter;
+//   @PositiveOrZero
+//   @Column(name = "likes")
+//   private Integer likesCounter;
 
 
 
@@ -53,15 +52,6 @@ public class PlaythroughEntity extends BaseEntity {
 
     public PlaythroughEntity setTitle(String title) {
         this.title = title;
-        return this;
-    }
-
-    public GameEntity getGame() {
-        return game;
-    }
-
-    public PlaythroughEntity setGame(GameEntity game) {
-        this.game = game;
         return this;
     }
 
@@ -83,14 +73,14 @@ public class PlaythroughEntity extends BaseEntity {
         return this;
     }
 
-    public Set<CommentEntity> getComments() {
-        return comments;
-    }
+ // public Set<CommentEntity> getComments() {
+ //     return comments;
+ // }
 
-    public PlaythroughEntity setComments(Set<CommentEntity> comments) {
-        this.comments = comments;
-        return this;
-    }
+ // public PlaythroughEntity setComments(Set<CommentEntity> comments) {
+ //     this.comments = comments;
+ //     return this;
+ // }
 
     public String getDescription() {
         return description;
@@ -101,14 +91,14 @@ public class PlaythroughEntity extends BaseEntity {
         return this;
     }
 
-    public Integer getLikesCounter() {
-        return likesCounter;
-    }
+ //  public Integer getLikesCounter() {
+ //      return likesCounter;
+ //  }
 
-    public PlaythroughEntity setLikesCounter(Integer likesCounter) {
-        this.likesCounter = likesCounter;
-        return this;
-    }
+ //  public PlaythroughEntity setLikesCounter(Integer likesCounter) {
+ //      this.likesCounter = likesCounter;
+ //      return this;
+ //  }
 
 
 }
