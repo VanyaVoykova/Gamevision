@@ -28,18 +28,6 @@ public class AdminRestControllerTest {
     //Here for better visibility and reusability
     private static final String ADMINNAME = "TestAdmin";
 
-    //  @Autowired
-    //  private PasswordEncoder passwordEncoder;
-//
-    //  @Autowired
-    //  private UserRoleRepository userRoleRepository;
-//
-    //  @Autowired
-    //  private UserRepository userRepository;
-//
-
-
-    //  private AdminRestController adminRestControllerToTest;
     private static final String USERNAME = "TestUser";
     @MockBean(name = "mockUserDetails")
     private UserDetails userDetails;
@@ -58,7 +46,7 @@ public class AdminRestControllerTest {
     void setUp() {
         testAdmin = testDataUtils.createTestAdmin(ADMINNAME);
         testUser = testDataUtils.createTestUser(USERNAME);
-
+    }
         //  mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         //Setup actual admin and user with the @Autowired repos and services
         //    UserEntity admin = new UserEntity();
@@ -101,7 +89,7 @@ public class AdminRestControllerTest {
         //   adminRestControllerToTest = new AdminRestController(adminService); //follow the way we inject service in the controller in actual app
 
 
-    }
+
 
 
     @AfterEach
@@ -116,7 +104,7 @@ public class AdminRestControllerTest {
 
     //Instead of login first in order to see the admin panel as it actually happens, we just test @WithMockUser
     @Test
-    @WithMockUser(username = ADMINNAME)
+    @WithMockUser(username = ADMINNAME, roles = {"ADMIN", "USER"})
     void adminPanelShown() throws Exception {
 
         //  mockMvc.perform(post("/users/login")
@@ -129,36 +117,7 @@ public class AdminRestControllerTest {
         mockMvc.perform(get("/admin"))
                 //  .andExpect(status().isOk());
                 .andExpect(view().name("admin-panel")); //no ModelAndView found
-        //   .andExpect(model().attributeExists("attrName")) //if we have an attribute
-        //andExpect(status().isOK()) //if we have status
-
-        //    mockMvc.perform(get("/admin")) //NOT just get, ModelAndView is returned here!
-
-        //NOT LIKE THIS   .andExpect(view().name("admin-panel.html")); //not expecting a view but a ModelAndView
     }
-
-    // @Test
-    // @WithMockUser(username = ADMINNAME)
-    // void promoteUserToAdminSuccessfulWithExistingUser() {
-    //     mockMvc.perform(put("/admin/promote"))
-    //             .
-    // }
-
-
-    //    @Test
-    ////make sure to follow field order; REAL repo is used, so change name and email to keep them unique or delete User from the DB
-    //    void testUserRegistrationWithValidData() throws Exception {
-    //        mockMvc.perform(post("/users/register")
-    //                        .param("username", "Gabriel")
-    //                        .param("email", "gabe@example.com")
-    //                        .param("password", "gabe")
-    //                        .param("confirmPassword", "gabe")
-    //                        .with(csrf()))
-    //                .andExpect(redirectedUrl("/"));
-    //
-    //        System.out.println("MockMvc: " + mockMvc);
-    //
-    //    }
 
 
 }

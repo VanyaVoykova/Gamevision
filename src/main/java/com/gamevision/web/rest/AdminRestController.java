@@ -28,9 +28,7 @@ public class AdminRestController {
     //  @GetMapping("/admin") //is loaded by a regular @AdminController
     @RequestMapping("/admin")
     public ModelAndView adminPanel() {
-        ModelAndView modelAndView = new ModelAndView("admin-panel");
-        modelAndView.setViewName("admin-panel.html");
-        return modelAndView;
+        return new ModelAndView("admin-panel");
     }
 
     //These return UserAdministrationViewModel that has extra data compared from the regular UserViewModel.

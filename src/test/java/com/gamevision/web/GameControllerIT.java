@@ -254,9 +254,9 @@ public class GameControllerIT {
     @Test
     @WithMockUser(username = "Admin", roles = {"ADMIN", "USER"})
     void deleteRedirectsWithNonexistentGame() throws Exception {
-        mockMvc.perform(get("/games/{id}/edit/", 23)
+        mockMvc.perform(get("/games/{id}/delete/", 23)
                         .with(csrf()))
-               // .andExpect(model().attributeExists("errorMessage"))
+             //.andExpect(model().attributeExists("errorMessage")) //doesn't find it?
                 .andExpect(redirectedUrl("/games/all"));
 
     }
