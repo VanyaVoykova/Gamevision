@@ -51,9 +51,9 @@
                            sec:authorize="hasRole('ROLE_ADMIN')"
                            th:href="@{/games/{gameId}/playthroughs/{playthroughId}/delete/(gameId=${gameId}, playthroughId=*{id})}"
                            th:id="*{id}">Delete</a>
-
+<!-- TODO: LIKES
                         <button class="link-button btn btn-info w-50">Like</button>
-                        <div class="likes-counter-div" th:text="*{likesCounter}">Likes: 77777</div>
+                        <div class="likes-counter-div" th:text="*{likesCounter}">Likes: 77777</div> -->
                         <!--todo:  <a th:href="@{/games/view-game/{gameId}(gameId=*{id})/comments}" class="link-button btn btn-info w-50">View Comments</a> -->
 
                         <!-- link to playthrough comment section - read and add comments -->

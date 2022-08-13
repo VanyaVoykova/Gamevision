@@ -44,7 +44,7 @@ async function handleFormSubmission(event) {
 
             })
 
-    } catch (ex){
+    } catch (ex) {
         window.alert(ex.message)
     }
 }
@@ -57,8 +57,8 @@ function commentAsHtml(comment) { //comment is an Object, get its text field
     commentHtml += `<h4>${timeCreated}</h4>\n`
     commentHtml += `<h4>Posted by: ${comment.authorUsername}</h4>\n`
     commentHtml += `<p>${comment.text}</p>\n`
-    commentHtml += `<button class="like-button btn btn-info w-50">Like</button>\n` //Like button
-    commentHtml += `<div class="likes-counter-div">Likes: ${comment.likesCounter}</div>\n`
+    //  commentHtml += `<button class="like-button btn btn-info w-50">Like</button>\n` //Like button
+    //commentHtml += `<div class="likes-counter-div">Likes: ${comment.likesCounter}</div>\n`
     commentHtml += `</div>\n`
 
     return commentHtml

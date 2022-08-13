@@ -85,7 +85,7 @@ public class AuthenticationControllerTest {
 
     }
 
-    @Test
+    @Test //Maybe @Aftereach wipes it
 //existing email - !isEmailFree
     void testUserRegistrationWithExistingPasswordDifferentUsername() throws Exception {
         mockMvc.perform(post("/users/register")

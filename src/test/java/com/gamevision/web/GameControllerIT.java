@@ -241,7 +241,7 @@ public class GameControllerIT {
     void doesNotUpdateGameWithInvalidData() throws Exception {
         Long id = testGame.getId();
         List<String> genres = List.of("RPG", "AA");
-        mockMvc.perform(patch("/games/{id}/edit/", id)
+        mockMvc.perform(post("/games/{id}/edit/", id) //was working with patch but had some issues in controller and SS, so changed to post
                         .param("title", "New Game Title")
                         .param("titleImageUrl", "new/test/img/url")
                         .param("description", "Too short")

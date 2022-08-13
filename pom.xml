@@ -82,15 +82,6 @@
             <version>3.0.4.RELEASE</version>
         </dependency>
 
-        <!-- TODO: uncomment when adding Spring Security integration tests-->
-        <!--   <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-            <scope>test</scope>
-        </dependency>-->
-
-
-
         <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-dependency-plugin -->
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>
@@ -135,6 +126,10 @@
         </dependency>
 
         <!-- Mockito======== -->
+        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
+        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
+        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
+        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
@@ -142,20 +137,21 @@
             <scope>test</scope>
         </dependency>
 
+
+
+
+
         <!-- Spring Test (includes MockMvc) -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
-            <version>5.9.0</version>
+          <!-- was 5.9.0, trying 5.7.0 trying without version, works somewhat with  <version>5.7.0</version> <-->
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -163,12 +159,8 @@
             <artifactId>junit</artifactId>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>4.6.1</version>
-            <scope>compile</scope>
-        </dependency>
+
+        <!-- got mockito all, removed mockito core -->
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
@@ -178,14 +170,16 @@
 
 
 
-        <!-- for @BeforeEach and @AfterEach to work -->
+        <!-- for @BeforeEach and @AfterEach to work    tests run but @Before and @AfterEach are screwed 5.7.0  -->
+        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine -->
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <!--<version>5.9.0</version> -->
+            <version>5.8.2</version>
             <scope>test</scope>
         </dependency>
+
 
 
 

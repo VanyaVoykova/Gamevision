@@ -7,10 +7,12 @@ import com.gamevision.model.entity.*;
 import com.gamevision.model.enums.UserRoleEnum;
 import com.gamevision.model.servicemodels.UserRegisterServiceModel;
 import com.gamevision.model.servicemodels.UserServiceModel;
+import com.gamevision.model.view.GameCardViewModel;
 import com.gamevision.model.view.UserAdministrationViewModel;
 import com.gamevision.repository.ProfilePictureRepository;
 import com.gamevision.repository.UserRepository;
 import com.gamevision.repository.UserRoleRepository;
+import com.gamevision.service.GameService;
 import com.gamevision.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,6 +38,7 @@ public class UserServiceImpl implements UserService {
     private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsService appUserDetailsService;
+    private final GameService gameService;
     private final ProfilePictureRepository profilePictureRepository; //no service, as barely any logic is required
     private final String adminPass;
     private final ModelMapper modelMapper;
@@ -43,11 +47,12 @@ public class UserServiceImpl implements UserService {
                            UserRoleRepository userRoleRepository,
                            PasswordEncoder passwordEncoder,
                            UserDetailsService appUserDetailsService,//"${spring.security.user.password}"
-                           ProfilePictureRepository profilePictureRepository, @Value("admin") String adminPass, ModelMapper modelMapper) { //from application.properties; there is also a default pass shown in the console when you start the app
+                           GameService gameService, ProfilePictureRepository profilePictureRepository, @Value("admin") String adminPass, ModelMapper modelMapper) { //from application.properties; there is also a default pass shown in the console when you start the app
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
         this.appUserDetailsService = appUserDetailsService;
+        this.gameService = gameService;
         this.profilePictureRepository = profilePictureRepository;
         this.adminPass = adminPass;
         this.modelMapper = modelMapper;
@@ -94,6 +99,19 @@ public class UserServiceImpl implements UserService {
                 .setAuthentication(auth);
 
     }
+
+    //todo uncomment for User Profile functionality
+ // public List<GameCardViewModel> getUserGamesByUsername(String username) {
+ //     UserEntity user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+ //     Set<GameEntity> userGames = user.getGames();
+ //     List<GameCardViewModel> userGamesAsCards = new ArrayList<>();
+ //
+ //     for (GameEntity gameEntity : userGames) {
+ //         userGamesAsCards.add(gameService.mapGameEntityToCardView(gameEntity));
+ //     }
+
+ //     return userGamesAsCards;
+ // }
 
 
     //=============================================

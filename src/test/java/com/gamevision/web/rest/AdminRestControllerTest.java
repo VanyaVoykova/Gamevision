@@ -82,8 +82,8 @@ public class AdminRestControllerTest {
                         .contentType("application/json")
                         .accept("application/json")
                 .with(csrf()))
-                .andExpect(status().is(200));
-                //  .andExpect(status().isOk());
+               // .andExpect(status().is(200));
+                .andExpect(status().isOk());
               //  .andExpect(view().name("admin-panel")); //no ModelAndView found
     }
 

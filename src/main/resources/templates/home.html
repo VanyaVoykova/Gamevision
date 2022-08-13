@@ -26,10 +26,10 @@
     <!--th:each="game : ${carouselGames}" th:object="${game}">           th:class="${game.isFirst} ? 'item active':'item' -->
     <!-- Need to know which one is the first, as the first slide in the carousel needs an active attribute -->
 
-    <div class="home-cards-container row">
+    <div class="home-cards-container row mx-auto">
         <!--  <div class="home-game-card col-sm-6"> -->
 
-        <div class="home-game-card container col border-light col-md-6 col-sm-12" th:each="game : ${carouselGames}"
+        <div class="home-game-card container col border-light col-lg-3 col-md-6 col-sm-9" th:each="game : ${carouselGames}"
              th:object="${game}">
             <div class="card-image-container">  <img alt="Card image cap" class="home-card-title-img" th:src="*{titleImageUrl}"></div>
 

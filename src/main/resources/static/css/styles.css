@@ -111,7 +111,6 @@ main {
 }
 
 
-
 /** margin: 2rem auto 4rem;
   width: 90%;
   max-width: 70rem;
@@ -198,7 +197,7 @@ figure img {
 
 
 .card-image-container {
-display: inline;
+    display: inline;
 
 }
 
@@ -377,6 +376,7 @@ position: relative;
 .homepage-title-container {
     display: block;
 }
+
 .no-games-quote {
     color: white;
     font-size: 1.5rem;
@@ -393,6 +393,7 @@ position: relative;
     padding-left: 20%;
     margin-top: 1.5%;
 }
+
 /** game cards */
 .home-card-container {
     display: block;
@@ -407,16 +408,16 @@ position: relative;
 }
 
 
-
 .home-game-card {
     width: 20%;
+    height: 30%;
     display: inline-block;
     float: left;
 }
 
 
 .home-game-card:hover {
-    width: 30%;
+    width: 23%; /** increase width only, increased height pushes other cards away from the intuitive click spot */
     border: 3px solid dodgerblue;
 }
 
@@ -488,6 +489,7 @@ iframe {
 label {
     color: white;
 }
+
 /**++++++++++++++++++++++ GAME VIEW WITH COMMENTS++++++++++++++++++++++++++ */
 /** TODO: fix these tree feedback elements */
 

@@ -33,15 +33,13 @@ public class GameServiceImpl implements GameService {
     private final GameRepository gameRepository;
     private final UserRepository userRepository;
     private final GenreRepository genreRepository;
-    private final PlaythroughService playthroughService;
     private final ModelMapper modelMapper;
 
-    //@Lazy PlaythroughService to avoid cycling dependency problem (encountered while trying to delete a PlaythroughEntity)
-    public GameServiceImpl(GameRepository gameRepository, UserRepository userRepository, GenreRepository genreRepository, @Lazy PlaythroughService playthroughService, ModelMapper modelMapper) {
+    //Just uncouple PlaythroughEntity from GameEntity @Lazy PlaythroughService to avoid cycling dependency problem (encountered while trying to delete a PlaythroughEntity)
+    public GameServiceImpl(GameRepository gameRepository, UserRepository userRepository, GenreRepository genreRepository, ModelMapper modelMapper) {
         this.gameRepository = gameRepository;
         this.userRepository = userRepository;
         this.genreRepository = genreRepository;
-        this.playthroughService = playthroughService;
         this.modelMapper = modelMapper;
     }
 
@@ -230,8 +228,8 @@ public class GameServiceImpl implements GameService {
         gameRepository.save(gameToLoseAPlaythrough); //update game
     }
 
-
-    private GameCardViewModel mapGameEntityToCardView(GameEntity gameEntity) {
+    @Override
+    public GameCardViewModel mapGameEntityToCardView(GameEntity gameEntity) {
         GameCardViewModel gameCardView = modelMapper.map(gameEntity, GameCardViewModel.class);
         List<String> genresAsStrings = gameEntity.getGenres()
                 .stream()

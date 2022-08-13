@@ -42,6 +42,8 @@ public interface GameService {
 
     void removePlaythroughFromGameByGameIdAndPlaythroughId(Long gameId, Long playthroughId);
 
+    GameCardViewModel mapGameEntityToCardView(GameEntity gameEntity);
+
     // void removePlaythroughFromPlaythroughsByGameIdAndPlaythroughId(Long gameId, Long playthroughId);
 
 }

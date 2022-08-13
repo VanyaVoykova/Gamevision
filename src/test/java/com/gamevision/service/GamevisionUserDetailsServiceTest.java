@@ -90,13 +90,11 @@ public class GamevisionUserDetailsServiceTest {
 
     @Test
     void testLoadUserByUsername_UserDoesNotExist() {
-
         //Testing for nonexistent user and Mocks return empty optionals, so they'll already behave as if no such user exists
         //if we don't arrange anything
-
         Assertions.assertThrows(UsernameNotFoundException.class, () -> userDetailsServiceToTest.loadUserByUsername("Nonexistent"));
     }
 
 
 }
-//todo test banned user cannot access stuff
+//todo test banned user cannot access respurces requiring authorization
