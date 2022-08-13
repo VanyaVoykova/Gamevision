@@ -1,5 +1,6 @@
 package com.gamevision.web;
 
+import com.gamevision.errorhandling.exceptions.GameNotFoundException;
 import com.gamevision.model.entity.CommentEntity;
 import com.gamevision.model.entity.GameEntity;
 import com.gamevision.model.entity.PlaythroughEntity;
@@ -14,10 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -84,5 +90,40 @@ public class PlaythroughControllerTest {
                 .perform(get("/games/" + id + "/playthroughs/all"))
                 .andExpect(view().name("/errors/playthroughs-not-found-error"));
     }
+
+    @Test
+    @WithMockUser(username = "Admin", roles = {"ADMIN", "USER"})
+    void showsAddPlaythroughViewForAdminsOnly() throws Exception {
+        Long gameId = testGame.getId();
+        this.mockMvc.perform(get("/games/{gameId}/playthroughs/add", gameId))
+                .andExpect(model().attribute("gameTitle", testGame.getTitle()))
+                .andExpect(view().name("playthrough-add"));
+
+    }
+
+    @Test
+    @WithMockUser(username = "Admin", roles = {"ADMIN", "USER"})
+    void correctMessageWhenAttemptingToAddPlaythroughToNonexistentGame() throws Exception {
+        this.mockMvc.perform(get("/games/11/playthroughs/add"))
+                .andExpect(model().attribute("exceptionMessage", "Game not found."))
+                .andExpect(view().name("playthrough-add"));
+
+    }
+
+    @Test
+    @WithMockUser(username = "Admin", roles = {"ADMIN", "USER"})
+    void addPlaythroughWithValidData() throws Exception {
+
+        Long gameId = testGame.getId();
+        mockMvc.perform(post("/games/{gameId}/playthroughs/add", gameId)
+                //look up binding model
+                .param("title", "Test Playthrough Title")
+                .param("videoUrl", "/test/url")
+                .param("description", "Test Playthrough Description")
+                .with(csrf()))
+                .andExpect(redirectedUrl("/games/" + gameId + "/playthroughs/all"));
+
+    }
+
 
 }
