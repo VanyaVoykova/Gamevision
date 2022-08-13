@@ -110,19 +110,31 @@ public class PlaythroughControllerTest {
 
     }
 
-    @Test
+    @Test //todo fails
     @WithMockUser(username = "Admin", roles = {"ADMIN", "USER"})
     void addPlaythroughWithValidData() throws Exception {
 
         Long gameId = testGame.getId();
         mockMvc.perform(post("/games/{gameId}/playthroughs/add", gameId)
-                //look up binding model
-                .param("title", "Test Playthrough Title")
-                .param("videoUrl", "/test/url")
-                .param("description", "Test Playthrough Description")
-                .with(csrf()))
+                        //look up binding model
+                        .param("title", "Test Playthrough Title")
+                        .param("videoUrl", "/test/url")
+                        .param("description", "Test Playthrough Description")
+                        .with(csrf()))
                 .andExpect(redirectedUrl("/games/" + gameId + "/playthroughs/all"));
 
+    }
+
+    @Test //todo fails
+    @WithMockUser(username = "Admin", roles = {"ADMIN", "USER"})
+    void deletePlaythroughRedirectsSuccessfully() throws Exception {
+        PlaythroughEntity playthrough = testDataUtils.createTestPlaythrough(testUser);
+        testGame.getPlaythroughs().add(playthrough);
+        gameRepository.save(testGame); //update with playthrough
+        Long gameId = testGame.getId();
+        Long playthroughId = playthrough.getId();
+        mockMvc.perform(get("/games/{gameId}/playthroughs/{playthroughId}/delete", gameId, playthroughId))
+                .andExpect(redirectedUrl("redirect:/games/" + gameId + "/playthroughs/all"));
     }
 
 

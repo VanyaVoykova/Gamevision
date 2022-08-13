@@ -48,18 +48,13 @@ public class PlaythroughController {
                 return "/errors/playthroughs-not-found-error";
             }
 
-            if (gameTitle == null) {
-                model.addAttribute("gameNotFound", "Game not found.");
-                return "/errors/game-not-found-error";
-            }
-
             model.addAttribute("gameTitle", gameTitle);
             model.addAttribute("playthroughs", playthroughs);
             model.addAttribute("gameId", gameId); //for the th:action in template
 
         } catch (Exception e) {
             model.addAttribute("exceptionMessage", e.getMessage()); //or with model???
-            System.out.println(e.getMessage());
+            model.addAttribute("gameNotFound", "Game not found.");
             return "/errors/game-not-found-error";
         }
 

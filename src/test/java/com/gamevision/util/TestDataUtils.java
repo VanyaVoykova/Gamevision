@@ -126,8 +126,8 @@ public class TestDataUtils {
     public void wipeDatabase() { //roles and genres are pretty much hardcoded, so @Autowired in the tests
         //wiping order is important, due to FK constraints (playthrough tied to game, games have addedBy User)
         commentRepository.deleteAll();
-        playthroughRepository.deleteAll(); //to avoid orphaned playthroughs without a game
         gameRepository.deleteAll();
+        playthroughRepository.deleteAll();
         genreRepository.deleteAll();
         userRepository.deleteAll();
         userRoleRepository.deleteAll();

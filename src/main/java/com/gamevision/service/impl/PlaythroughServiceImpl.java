@@ -50,37 +50,17 @@ public class PlaythroughServiceImpl implements PlaythroughService {
 
         //initialize Set<CommentEntity> comments  and  private Integer likesCounter; in the @Service!
         PlaythroughEntity playthrough = new PlaythroughEntity()
-                .setGame(game)
+
                 .setTitle(playthroughAddBindingModel.getTitle())
                 .setVideoUrl(playthroughAddBindingModel.getVideoUrl())
                 .setDescription(playthroughAddBindingModel.getDescription())
-                .setAddedBy(addedByUser)
-                .setComments(new LinkedHashSet<>())
-                .setLikesCounter(0);
+                .setAddedBy(addedByUser);
 
 
         game.getPlaythroughs().add(playthroughRepository.save(playthrough));
         gameRepository.save(game); //HAVE TO "UPDATE" the GameEntity like THIS!!!
     }
 
-    // @Override
-    // public PlaythroughEntity addPlaythroughWhenAddingGame(Long gameId, String title, String videoUrl, String description, String username) {
-    //     GameEntity game = gameRepository.findById(gameId).orElseThrow(GameNotFoundException::new); //OPTIMIZATION: better call the GameService...
-    //     UserEntity addedByUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new); //nope can be added by a different user from the one who added the game
-
-
-    //     PlaythroughEntity playthrough = new PlaythroughEntity()
-    //             .setGame(game)
-    //             .setTitle(title)
-    //             .setVideoUrl(videoUrl)
-    //             .setDescription(description)
-    //             .setAddedBy(addedByUser);
-
-    //     return playthroughRepository.save(playthrough);
-
-    // }
-
-    //TBI: Maybe edit some day
 
     @Override
     public List<PlaythroughViewModel> getAllPlaythroughsForGame(Long gameId) {
@@ -97,10 +77,8 @@ public class PlaythroughServiceImpl implements PlaythroughService {
                     .setId(entity.getId())
                     .setTitle(entity.getTitle())
                     .setVideoUrl(entity.getVideoUrl())
-                    .setDescription(entity.getDescription())
-                    .setLikesCounter(entity.getLikesCounter())
-                    .setComments(entity.getComments().stream()
-                            .map(commentEntity -> modelMapper.map(commentEntity, CommentViewModel.class)).collect(Collectors.toList()));
+                    .setDescription(entity.getDescription());
+
 //TBI: comments for playthroughs
             playthroughs.add(viewModel);
         }
@@ -114,21 +92,13 @@ public class PlaythroughServiceImpl implements PlaythroughService {
         return playthroughRepository.findById(id).orElseThrow(PlaythroughNotFoundException::new);
     }
 
-    // @Override
-    // public void deletePlaythroughByGameIdAndPlaythroughId(Long gameId, Long playthroughId) {
-    //     //remove it from the GameEntity's set first! cannot delete it directly...
-    //   //  PlaythroughEntity playthroughToDelete = playthroughRepository.findById(playthroughId).orElseThrow(PlaythroughNotFoundException::new);
-    //     gameService.removePlaythroughFromPlaythroughsByGameIdAndPlaythroughId(gameId, playthroughId); //removes PT from the Game's collection and updates the game
-
-    //     playthroughRepository.deleteById(playthroughId); //delete from Playthrough repo
-    // }
 
     @Override
-    public void deletePlaythroughById(Long id) {
-        PlaythroughEntity playthroughToDelete = playthroughRepository.findById(id).orElseThrow(PlaythroughNotFoundException::new);
+    public void deletePlaythroughById(Long id) { //todo check removal from game
+       // PlaythroughEntity playthroughToDelete = playthroughRepository.findById(id).orElseThrow(PlaythroughNotFoundException::new);
         //remove the comments; not implemented yet but PlaythroughEntity has comments as a Set
-        playthroughToDelete.getComments().clear();
-        playthroughRepository.save(playthroughToDelete); //update in repo without comments
+     //   playthroughToDelete.getComments().clear();
+      //  playthroughRepository.save(playthroughToDelete); //update in repo without comments
         playthroughRepository.deleteById(id);
     }
 
