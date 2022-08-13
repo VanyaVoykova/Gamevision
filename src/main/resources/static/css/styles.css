@@ -474,6 +474,10 @@ iframe {
     height: 3%;
     width: 100%;
 }
+
+label {
+    color: white;
+}
 /**++++++++++++++++++++++ GAME VIEW WITH COMMENTS++++++++++++++++++++++++++ */
 /** TODO: fix these tree feedback elements */
 
