@@ -26,32 +26,33 @@
     <!--th:each="game : ${carouselGames}" th:object="${game}">           th:class="${game.isFirst} ? 'item active':'item' -->
     <!-- Need to know which one is the first, as the first slide in the carousel needs an active attribute -->
 
-    <div class="home-games-container" th:each="game : ${carouselGames}" th:object="${game}">
-        <div class="home-card-container">
+    <div class="home-cards-container row">
+        <!--  <div class="home-game-card col-sm-6"> -->
 
-            <div class="home-game-card col-sm-6">
-
-                <div class="card border-light mb-3">
-                    <img alt="Card image cap" class="card-title-img card-img-top" th:src="*{titleImageUrl}">
-                    <div class="card-body">
-                        <h5 class="card-title" th:text="*{title}">Game title</h5>
-                        <p class="card-text" th:text="*{description}">Short game description.</p>
-                        <!-- List<String> genres in GameCardViewModel and GameViewModel-->
-
-                        <hr class="hr-separator">
-                        <div class="buttons-container">
-                            <a class="link-button btn btn-info w-50" th:href="@{/games/{gameId}(gameId=*{id})}">View
-                                game</a>
+        <div class="home-game-card container col border-light col-md-6 col-sm-12" th:each="game : ${carouselGames}"
+             th:object="${game}">
+            <div class="card-image-container">  <img alt="Card image cap" class="home-card-title-img" th:src="*{titleImageUrl}"></div>
 
 
-                        </div>
-                    </div>
+            <div class="home-card-text-buttons">
+                <h5 class="card-title" th:text="*{title}">Game title</h5>
+
+                <p class="card-text" th:text="*{description}">Short game description.</p>
+                <!-- List<String> genres in GameCardViewModel and GameViewModel-->
+
+                <hr class="hr-separator">
+                <div class="buttons-container">
+                    <a class="link-button btn btn-info w-50" th:href="@{/games/{gameId}(gameId=*{id})}">View
+                        game</a>
                 </div>
 
-
             </div>
-
         </div>
+
+
+        <!--   </div>-->
+
+
     </div>
 
 

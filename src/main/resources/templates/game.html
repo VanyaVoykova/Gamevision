@@ -66,12 +66,13 @@
         <!-- Short on time, don't remember much from JS SAP, never tried to integrate them in Java before, go with separate pages -->
         <!-- playthroughs section TODO: optimization: show/hide Playthroughs/Comments on this page-->
 
-        <h1>Comments</h1>
+      <div class="comments-heading-container" > <h1>Comments</h1> </div>
         <small id=" comment-errors"></small>
         <!-- Make comment form visible only for authenticated users -->
         <!--  <div sec:authorize="isAuthenticated()">  doesn't change comments not getting saved -->
 
         <!----------------------------------------------- COMMENTS SUBMISSION FORM---------------------------------------------------->
+        <div class="comments-panel">
         <form action="/" id="commentForm" method="POST" sec:authorize="isAuthenticated()">
             <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
             <!-- changed to # from "/"   action actual path is sniffed by JS through the submit event -->
@@ -101,6 +102,7 @@
         sec:authorize="!isAuthenticated() || isAuthenticated()" -->
         <!-- script inserts comments in #comments-container -->
         <div id="comments-container"></div>
+        </div>
     </section>
 </main>
 <!-- <script th:src="@{/scripts/game.js}"></script> switch between Playthroughs and Comments - show/hide-->

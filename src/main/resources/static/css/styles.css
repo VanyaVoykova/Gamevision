@@ -196,6 +196,13 @@ figure img {
     flex: 1;
 }
 
+
+.card-image-container {
+display: inline;
+
+}
+
+
 /** .spacer-home {
     padding: 10%;
     flex: 1;
@@ -386,16 +393,19 @@ position: relative;
     padding-left: 20%;
     margin-top: 1.5%;
 }
-
-.home-card-container {
-    display: block;
-}
-
 /** game cards */
 .home-card-container {
+    display: block;
     left: 30%;
     float: top;
 }
+
+
+.home-card-title-img {
+    width: 100%;
+    height: 22vh;
+}
+
 
 
 .home-game-card {
