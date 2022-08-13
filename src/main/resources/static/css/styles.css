@@ -111,6 +111,7 @@ main {
 }
 
 
+
 /** margin: 2rem auto 4rem;
   width: 90%;
   max-width: 70rem;
@@ -369,7 +370,6 @@ position: relative;
 .homepage-title-container {
     display: block;
 }
-
 .no-games-quote {
     color: white;
     font-size: 1.5rem;
@@ -474,8 +474,18 @@ iframe {
     height: 3%;
     width: 100%;
 }
-
+/**++++++++++++++++++++++ GAME VIEW WITH COMMENTS++++++++++++++++++++++++++ */
 /** TODO: fix these tree feedback elements */
+
+.comments-heading-container {
+    display: flex;
+    top: 65%;
+    left: 50%;
+    width: 100%;
+    margin: 1%;
+    padding-left: 43%;
+}
+
 /** comments */
 .comments-section {
     display: block;
@@ -495,6 +505,14 @@ iframe {
     width: 100%;
     margin: 1.5%;
 }
+
+/** .comments-panel {
+    display: block;
+    position: absolute;
+}
+
+*/
+
 
 /** Posted by: {username}*/
 .comment-container h4 {
