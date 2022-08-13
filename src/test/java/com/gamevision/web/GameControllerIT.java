@@ -217,7 +217,7 @@ public class GameControllerIT {
         return new SimpleGrantedAuthority("ROLE_" + userRole.getName().name()); ///"ROLE_"   syntax is important!
     }
 
-    // @Test
+    // @Test //TODO: problems with edit and update tests
     // @WithMockUser(username = "Admin", roles = {"ADMIN", "USER"})
     // void updatesGameWithValidData() throws Exception {
     //     Long id = testGame.getId();

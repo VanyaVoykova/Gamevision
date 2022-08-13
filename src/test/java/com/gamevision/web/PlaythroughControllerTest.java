@@ -110,7 +110,7 @@ public class PlaythroughControllerTest {
 
     }
 
-    @Test //todo fails
+    @Test //todo fails // recurring problem with post/put
     @WithMockUser(username = "Admin", roles = {"ADMIN", "USER"})
     void addPlaythroughWithValidData() throws Exception {
 
@@ -120,7 +120,7 @@ public class PlaythroughControllerTest {
                         .param("title", "Test Playthrough Title")
                         .param("videoUrl", "/test/url")
                         .param("description", "Test Playthrough Description")
-                        .with(csrf()))
+                        .with(csrf())) //game not found???
                 .andExpect(redirectedUrl("/games/" + gameId + "/playthroughs/all"));
 
     }
