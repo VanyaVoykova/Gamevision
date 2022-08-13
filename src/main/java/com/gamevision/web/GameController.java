@@ -139,25 +139,25 @@ public class GameController {
 
     @GetMapping("/games/{id}/edit")
     public String editGame(@PathVariable("id") Long id, Model model) {
-        GameViewModel gameViewModel = gameService.getGameViewModelById(id); //throws GameNotFoundException
+      //don't catch GameNotFoundException, it has to show itself in this case
+            GameViewModel gameViewModel = gameService.getGameViewModelById(id); //throws GameNotFoundException
+            if (!model.containsAttribute("gameEditBindingModel")) {
+                model.addAttribute("gameEditBindingModel", new GameEditBindingModel());
+            }
 
-        if (!model.containsAttribute("gameEditBindingModel")) {
-            model.addAttribute("gameEditBindingModel", new GameEditBindingModel());
-        }
+            model.addAttribute("gameViewModel", gameViewModel);
 
-        model.addAttribute("gameViewModel", gameViewModel);
-
-        //All genres for the checkboxes' labels
-        model.addAttribute("allGenres", GenreNameEnum.values());// for th: each, text to display the full name with .getGenreName()
+            //All genres for the checkboxes' labels
+            model.addAttribute("allGenres", GenreNameEnum.values());// for th: each, text to display the full name with .getGenreName()
 
 
-        //TODO: pre-fill checkboxes for the genres
-        //th if in HTML compare if genre checkbox label is equal to one of the String genres of the VM, if equal -> check the checkbox!
-        //Genres come as:    private Set<GenreEntity> genres;
-        List<String> chosenGenres = gameViewModel.getGenres(); //genres from the entity
-        model.addAttribute("chosenGenres", chosenGenres);
+            //TODO: pre-fill checkboxes for the genres
+            //th if in HTML compare if genre checkbox label is equal to one of the String genres of the VM, if equal -> check the checkbox!
+            //Genres come as:    private Set<GenreEntity> genres;
+            List<String> chosenGenres = gameViewModel.getGenres(); //genres from the entity
+            model.addAttribute("chosenGenres", chosenGenres);
+            return "game-edit";
 
-        return "game-edit";
     }
 
     @PostMapping("/games/{id}/edit") //"genre" is the <input> name, so the request param's name has to be the same
